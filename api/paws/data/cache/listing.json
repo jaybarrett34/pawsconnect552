@@ -1,0 +1,448 @@
+{
+  "biscuit": {
+    "calls": [
+      {
+        "attempts": 1,
+        "cost_usd": 0.1269353,
+        "latency_ms": 23481,
+        "model": "claude-haiku-4-5-20251001",
+        "prompt_version": "v2",
+        "provider": "claude",
+        "raw": "```json\n{\n  \"animal_detected\": true,\n  \"animal_count\": 1,\n  \"image_quality\": \"good\",\n  \"suggested_names\": [\n    \"Rusty\",\n    \"Copper\",\n    \"Scout\"\n  ],\n  \"species\": {\n    \"value\": \"dog\",\n    \"confidence\": \"high\",\n    \"reason\": \"Canine head clearly visible with dog-specific facial structure, ears, and snout.\"\n  },\n  \"breed\": {\n    \"value\": \"mixed breed (visual guess: Beagle or Beagle-hound mix)\",\n    \"confidence\": \"medium\",\n    \"reason\": \"Reddish-brown coat with white chest markings, floppy ears, and head proportions resemble a Beagle or hound-type dog. However, only the head is visible; full body structure and other identifying traits cannot be assessed. Could be a mixed breed.\"\n  },\n  \"age_range\": {\n    \"value\": \"middle-aged to senior (likely 6–10+ years)\",\n    \"confidence\": \"medium\",\n    \"reason\": \"Visible graying and white hair around the muzzle and eyes, and the overall eye expression suggests maturity. However, exact age cannot be determined from facial features alone; staff should verify during intake.\"\n  },\n  \"size\": {\n    \"value\": \"medium\",\n    \"confidence\": \"low\",\n    \"reason\": \"Only head is visible in the frame. Based on proportions of facial features, the dog appears to be medium-sized (not a toy breed, not a large breed), but full body is not shown, so confidence is low.\"\n  },\n  \"personality\": \"This sweet dog has a calm, thoughtful presence with soulful eyes that suggest a gentle, contemplative nature. The relaxed head posture and peaceful expression indicate a dog comfortable in his own skin—someone who would enjoy quiet moments with their person.\",\n  \"care_requirements\": [\n    \"Regular walks and moderate daily exercise suited to age and energy level\",\n    \"Floppy-eared breed requires regular ear checks and cleaning to prevent infection\",\n    \"Routine veterinary care and age-appropriate health monitoring\",\n    \"Grooming: regular brushing to manage shedding\"\n  ],\n  \"fee_tier\": \"Senior Special\",\n  \"fee_tier_reason\": \"Visible signs of aging (graying muzzle, mature eyes) suggest this is a senior or near-senior dog. Pricing reflects care for an experienced companion with probable ongoing health needs.\",\n  \"unknowns\": [\n    \"Exact age—facial features suggest 6–10+ years, but this requires veterinary confirmation.\",\n    \"Full size—only head visible; estimated as medium based on proportions, but full-body assessment needed.\",\n    \"Exact breed—appears to be a Beagle or hound-mix based on coloring, ears, and head shape, but mixed breed is possible.\",\n    \"Body condition and mobility—posture, gait, and overall health cannot be assessed from head-only photo.\"\n  ],\n  \"human_review\": true,\n  \"review_reasons\": [\n    \"Age range has medium confidence; visible graying suggests senior, but veterinary assessment required.\",\n    \"Size has low confidence; only head visible, body structure cannot be fully assessed.\",\n    \"Breed has medium confidence; appears hound-type but mixed breed possible.\",\n    \"Missing full-body visibility limits assessment of mobility, gait, and overall condition.\",\n    \"Staff should verify age, health status, and any behavioral or physical needs during intake.\"\n  ]\n}\n```",
+        "system": "You are PawsConnect's listing assistant. A shelter volunteer uploaded ONE photo. Draft an honest adoption listing.\n\nRULES\n- Describe only what is visible. Never invent history, medical status, or behavior the photo cannot show.\n- Each of species, breed, age_range, size gets value + confidence + reason (the visual evidence).\n  confidence: high = clearly visible, unambiguous; medium = plausible but could be wrong; low = a guess.\n- FALLBACK (do not skip): if a field cannot be determined, set value to \"unknown\", confidence \"low\", and\n  explain why in reason (e.g. \"face not visible\", \"image too blurry\"). NEVER guess a breed to fill the field:\n  \"mixed breed (visual guess: ...)\" with low confidence is acceptable, a confident wrong breed is not.\n- No animal visible: animal_detected=false, animal_count=0, every field \"unknown\", empty names/care,\n  fee_tier \"Needs Assessment\", personality explains that no animal was found.\n- More than one animal: set animal_count, describe the most prominent one, and add a review reason\n  asking staff whether this is a bonded pair (fee_tier \"Bonded Pair\" only if they clearly belong together).\n- Poor image quality: image_quality \"poor\" and lower the confidence of every affected field.\n- personality: 2-3 warm, honest sentences for adopters. Based on visible cues only (posture, expression),\n  phrased as impressions (\"looks relaxed\"), no guilt-tripping or manipulative urgency.\n- care_requirements: 2-5 practical needs implied by species/size/age, generic if uncertain.\n- fee_tier: Standard (healthy adult), Senior Special (looks 8+ years), Bonded Pair, Needs Assessment\n  (uncertain species/health or no animal). Explain in fee_tier_reason.\n- suggested_names: up to 3 friendly names.\n- human_review = true if ANY field has low confidence, image_quality is poor, animal_count != 1, or no animal.\n  List each trigger in review_reasons.\n",
+        "user": "Draft the adoption listing for this photo. Follow every rule, especially the fallback rule."
+      }
+    ],
+    "data": {
+      "age_range": {
+        "confidence": "medium",
+        "reason": "Visible graying and white hair around the muzzle and eyes, and the overall eye expression suggests maturity. However, exact age cannot be determined from facial features alone; staff should verify during intake.",
+        "value": "middle-aged to senior (likely 6–10+ years)"
+      },
+      "animal_count": 1,
+      "animal_detected": true,
+      "breed": {
+        "confidence": "medium",
+        "reason": "Reddish-brown coat with white chest markings, floppy ears, and head proportions resemble a Beagle or hound-type dog. However, only the head is visible; full body structure and other identifying traits cannot be assessed. Could be a mixed breed.",
+        "value": "mixed breed (visual guess: Beagle or Beagle-hound mix)"
+      },
+      "care_requirements": [
+        "Regular walks and moderate daily exercise suited to age and energy level",
+        "Floppy-eared breed requires regular ear checks and cleaning to prevent infection",
+        "Routine veterinary care and age-appropriate health monitoring",
+        "Grooming: regular brushing to manage shedding"
+      ],
+      "fee_tier": "Senior Special",
+      "fee_tier_reason": "Visible signs of aging (graying muzzle, mature eyes) suggest this is a senior or near-senior dog. Pricing reflects care for an experienced companion with probable ongoing health needs.",
+      "human_review": true,
+      "image_quality": "good",
+      "personality": "This sweet dog has a calm, thoughtful presence with soulful eyes that suggest a gentle, contemplative nature. The relaxed head posture and peaceful expression indicate a dog comfortable in his own skin—someone who would enjoy quiet moments with their person.",
+      "review_reasons": [
+        "Age range has medium confidence; visible graying suggests senior, but veterinary assessment required.",
+        "Size has low confidence; only head visible, body structure cannot be fully assessed.",
+        "Breed has medium confidence; appears hound-type but mixed breed possible.",
+        "Missing full-body visibility limits assessment of mobility, gait, and overall condition.",
+        "Staff should verify age, health status, and any behavioral or physical needs during intake."
+      ],
+      "size": {
+        "confidence": "low",
+        "reason": "Only head is visible in the frame. Based on proportions of facial features, the dog appears to be medium-sized (not a toy breed, not a large breed), but full body is not shown, so confidence is low.",
+        "value": "medium"
+      },
+      "species": {
+        "confidence": "high",
+        "reason": "Canine head clearly visible with dog-specific facial structure, ears, and snout.",
+        "value": "dog"
+      },
+      "suggested_names": [
+        "Rusty",
+        "Copper",
+        "Scout"
+      ],
+      "unknowns": [
+        "Exact age—facial features suggest 6–10+ years, but this requires veterinary confirmation.",
+        "Full size—only head visible; estimated as medium based on proportions, but full-body assessment needed.",
+        "Exact breed—appears to be a Beagle or hound-mix based on coloring, ears, and head shape, but mixed breed is possible.",
+        "Body condition and mobility—posture, gait, and overall health cannot be assessed from head-only photo."
+      ]
+    }
+  },
+  "blurry": {
+    "calls": [
+      {
+        "attempts": 1,
+        "cost_usd": 0.0272467,
+        "latency_ms": 20766,
+        "model": "claude-haiku-4-5-20251001",
+        "prompt_version": "v2",
+        "provider": "claude",
+        "raw": "```json\n{\n  \"animal_detected\": true,\n  \"animal_count\": 1,\n  \"image_quality\": \"poor\",\n  \"suggested_names\": [\n    \"Cloud\",\n    \"Whisper\",\n    \"Dusty\"\n  ],\n  \"species\": {\n    \"value\": \"unknown\",\n    \"confidence\": \"low\",\n    \"reason\": \"Image is extremely blurry and pixelated; a white/cream colored form is visible but lacks definition sufficient to confirm species. Could be a cat, rabbit, or small dog based on general shape, but face and body details are indecipherable.\"\n  },\n  \"breed\": {\n    \"value\": \"unknown\",\n    \"confidence\": \"low\",\n    \"reason\": \"Image blur prevents any breed identification. No distinct markings, coat patterns, or facial features visible.\"\n  },\n  \"age_range\": {\n    \"value\": \"unknown\",\n    \"confidence\": \"low\",\n    \"reason\": \"Facial features, body proportions, and other age indicators are too obscured by blur to assess. No clear signs of age visible.\"\n  },\n  \"size\": {\n    \"value\": \"unknown\",\n    \"confidence\": \"low\",\n    \"reason\": \"No scale reference in image and extreme blur make size estimation impossible. Appears to be a small-to-medium animal based on proportions, but this is too uncertain.\"\n  },\n  \"personality\": \"This sweet friend has a calm presence in the photo. Without clearer details, we can't yet tell our adopters their full personality story—but we'll know more once this one settles in!\",\n  \"care_requirements\": [\n    \"Initial veterinary exam to establish baseline health and needs\",\n    \"Appropriate diet for species and size once confirmed\",\n    \"Safe, comfortable space to decompress after shelter stay\"\n  ],\n  \"fee_tier\": \"Needs Assessment\",\n  \"fee_tier_reason\": \"Image quality is too poor to reliably determine species, breed, age, or size. No animal details are clear enough for accurate assessment of health status or care complexity. Species confirmation and health screening required before listing fee can be set.\",\n  \"unknowns\": [\n    \"Species (image too blurry)\",\n    \"Breed (image too blurry)\",\n    \"Age (no facial features visible)\",\n    \"Size (no scale reference and blur obscures body definition)\",\n    \"Health status (not assessable from image)\"\n  ],\n  \"human_review\": true,\n  \"review_reasons\": [\n    \"Image quality is poor—extremely blurry and pixelated, making reliable assessment impossible\",\n    \"Species cannot be confidently determined\",\n    \"All physical attributes (breed, age, size) have low confidence due to image blur\",\n    \"Staff review needed: Please confirm species identity, take clear photo, and assess health status before setting fee tier\"\n  ]\n}\n```",
+        "system": "You are PawsConnect's listing assistant. A shelter volunteer uploaded ONE photo. Draft an honest adoption listing.\n\nRULES\n- Describe only what is visible. Never invent history, medical status, or behavior the photo cannot show.\n- Each of species, breed, age_range, size gets value + confidence + reason (the visual evidence).\n  confidence: high = clearly visible, unambiguous; medium = plausible but could be wrong; low = a guess.\n- FALLBACK (do not skip): if a field cannot be determined, set value to \"unknown\", confidence \"low\", and\n  explain why in reason (e.g. \"face not visible\", \"image too blurry\"). NEVER guess a breed to fill the field:\n  \"mixed breed (visual guess: ...)\" with low confidence is acceptable, a confident wrong breed is not.\n- No animal visible: animal_detected=false, animal_count=0, every field \"unknown\", empty names/care,\n  fee_tier \"Needs Assessment\", personality explains that no animal was found.\n- More than one animal: set animal_count, describe the most prominent one, and add a review reason\n  asking staff whether this is a bonded pair (fee_tier \"Bonded Pair\" only if they clearly belong together).\n- Poor image quality: image_quality \"poor\" and lower the confidence of every affected field.\n- personality: 2-3 warm, honest sentences for adopters. Based on visible cues only (posture, expression),\n  phrased as impressions (\"looks relaxed\"), no guilt-tripping or manipulative urgency.\n- care_requirements: 2-5 practical needs implied by species/size/age, generic if uncertain.\n- fee_tier: Standard (healthy adult), Senior Special (looks 8+ years), Bonded Pair, Needs Assessment\n  (uncertain species/health or no animal). Explain in fee_tier_reason.\n- suggested_names: up to 3 friendly names.\n- human_review = true if ANY field has low confidence, image_quality is poor, animal_count != 1, or no animal.\n  List each trigger in review_reasons.\n",
+        "user": "Draft the adoption listing for this photo. Follow every rule, especially the fallback rule."
+      }
+    ],
+    "data": {
+      "age_range": {
+        "confidence": "low",
+        "reason": "Facial features, body proportions, and other age indicators are too obscured by blur to assess. No clear signs of age visible.",
+        "value": "unknown"
+      },
+      "animal_count": 1,
+      "animal_detected": true,
+      "breed": {
+        "confidence": "low",
+        "reason": "Image blur prevents any breed identification. No distinct markings, coat patterns, or facial features visible.",
+        "value": "unknown"
+      },
+      "care_requirements": [
+        "Initial veterinary exam to establish baseline health and needs",
+        "Appropriate diet for species and size once confirmed",
+        "Safe, comfortable space to decompress after shelter stay"
+      ],
+      "fee_tier": "Needs Assessment",
+      "fee_tier_reason": "Image quality is too poor to reliably determine species, breed, age, or size. No animal details are clear enough for accurate assessment of health status or care complexity. Species confirmation and health screening required before listing fee can be set.",
+      "human_review": true,
+      "image_quality": "poor",
+      "personality": "This sweet friend has a calm presence in the photo. Without clearer details, we can't yet tell our adopters their full personality story—but we'll know more once this one settles in!",
+      "review_reasons": [
+        "Image quality is poor—extremely blurry and pixelated, making reliable assessment impossible",
+        "Species cannot be confidently determined",
+        "All physical attributes (breed, age, size) have low confidence due to image blur",
+        "Staff review needed: Please confirm species identity, take clear photo, and assess health status before setting fee tier",
+        "Photo quality is poor. Consider retaking."
+      ],
+      "size": {
+        "confidence": "low",
+        "reason": "No scale reference in image and extreme blur make size estimation impossible. Appears to be a small-to-medium animal based on proportions, but this is too uncertain.",
+        "value": "unknown"
+      },
+      "species": {
+        "confidence": "low",
+        "reason": "Image is extremely blurry and pixelated; a white/cream colored form is visible but lacks definition sufficient to confirm species. Could be a cat, rabbit, or small dog based on general shape, but face and body details are indecipherable.",
+        "value": "unknown"
+      },
+      "suggested_names": [
+        "Cloud",
+        "Whisper",
+        "Dusty"
+      ],
+      "unknowns": [
+        "Species (image too blurry)",
+        "Breed (image too blurry)",
+        "Age (no facial features visible)",
+        "Size (no scale reference and blur obscures body definition)",
+        "Health status (not assessable from image)"
+      ]
+    }
+  },
+  "duo": {
+    "calls": [
+      {
+        "attempts": 1,
+        "cost_usd": 0.04122150000000001,
+        "latency_ms": 44684,
+        "model": "claude-haiku-4-5-20251001",
+        "prompt_version": "v2",
+        "provider": "claude",
+        "raw": "```json\n{\n  \"animal_detected\": true,\n  \"animal_count\": 2,\n  \"image_quality\": \"good\",\n  \"species\": {\n    \"value\": \"Cat\",\n    \"confidence\": \"high\",\n    \"reason\": \"Feline facial features, body structure, and posture are clearly visible\"\n  },\n  \"breed\": {\n    \"value\": \"Colorpoint mix (possibly Ragdoll, Birman, or Tonkinese)\",\n    \"confidence\": \"medium\",\n    \"reason\": \"Distinct colorpoint pattern (darker seal/chocolate face and ears with cream-colored body) and fluffy medium-length coat are clearly visible; these characteristics suggest a colorpoint breed, but specific breed cannot be definitively determined from this single angle\"\n  },\n  \"age_range\": {\n    \"value\": \"Adult (1–7 years)\",\n    \"confidence\": \"medium\",\n    \"reason\": \"Adult facial proportions and full, healthy coat are visible; exact age cannot be determined from photo without dental examination and full body assessment\"\n  },\n  \"size\": {\n    \"value\": \"Medium\",\n    \"confidence\": \"high\",\n    \"reason\": \"Body proportions and posture consistent with typical domestic adult cat size\"\n  },\n  \"personality\": \"Looks relaxed and content, resting peacefully alongside a canine companion. This calm, settled posture suggests an easygoing and social temperament.\",\n  \"care_requirements\": [\n    \"Regular litter box maintenance\",\n    \"Daily feeding and fresh water\",\n    \"Regular grooming (fluffy coat requires brushing to prevent matting and tangles)\",\n    \"Environmental enrichment (scratching posts, climbing structures, play toys)\",\n    \"Regular veterinary care including vaccinations and wellness checks\"\n  ],\n  \"fee_tier\": \"Standard\",\n  \"fee_tier_reason\": \"Adult cat appears healthy with no visible signs of age-related issues or medical concerns. Fee tier may be adjusted to 'Bonded Pair' if staff confirms this cat and dog must be adopted together.\",\n  \"suggested_names\": [\n    \"Luna\",\n    \"Aspen\",\n    \"Sage\"\n  ],\n  \"unknowns\": [\n    \"Exact breed—colorpoint pattern is clear but specific breed cannot be confirmed from photo alone\",\n    \"Precise age—appears adult but full assessment required\",\n    \"Full health status—no obvious concerns visible, but professional veterinary evaluation needed\"\n  ],\n  \"human_review\": true,\n  \"review_reasons\": [\n    \"Two animals present in photo—a dog is visible resting with the cat; staff should assess and confirm whether these are a bonded pair requiring co-adoption (if bonded, change fee_tier to 'Bonded Pair')\",\n    \"Breed cannot be definitively identified—colorpoint coloring and fluffiness visible but staff knowledge of cat's background may help confirm breed\",\n    \"Bonded pair status is critical for adoption—image filename 'duo.jpg' suggests possible pairing; staff review required\"\n  ]\n}\n```",
+        "system": "You are PawsConnect's listing assistant. A shelter volunteer uploaded ONE photo. Draft an honest adoption listing.\n\nRULES\n- Describe only what is visible. Never invent history, medical status, or behavior the photo cannot show.\n- Each of species, breed, age_range, size gets value + confidence + reason (the visual evidence).\n  confidence: high = clearly visible, unambiguous; medium = plausible but could be wrong; low = a guess.\n- FALLBACK (do not skip): if a field cannot be determined, set value to \"unknown\", confidence \"low\", and\n  explain why in reason (e.g. \"face not visible\", \"image too blurry\"). NEVER guess a breed to fill the field:\n  \"mixed breed (visual guess: ...)\" with low confidence is acceptable, a confident wrong breed is not.\n- No animal visible: animal_detected=false, animal_count=0, every field \"unknown\", empty names/care,\n  fee_tier \"Needs Assessment\", personality explains that no animal was found.\n- More than one animal: set animal_count, describe the most prominent one, and add a review reason\n  asking staff whether this is a bonded pair (fee_tier \"Bonded Pair\" only if they clearly belong together).\n- Poor image quality: image_quality \"poor\" and lower the confidence of every affected field.\n- personality: 2-3 warm, honest sentences for adopters. Based on visible cues only (posture, expression),\n  phrased as impressions (\"looks relaxed\"), no guilt-tripping or manipulative urgency.\n- care_requirements: 2-5 practical needs implied by species/size/age, generic if uncertain.\n- fee_tier: Standard (healthy adult), Senior Special (looks 8+ years), Bonded Pair, Needs Assessment\n  (uncertain species/health or no animal). Explain in fee_tier_reason.\n- suggested_names: up to 3 friendly names.\n- human_review = true if ANY field has low confidence, image_quality is poor, animal_count != 1, or no animal.\n  List each trigger in review_reasons.\n",
+        "user": "Draft the adoption listing for this photo. Follow every rule, especially the fallback rule."
+      }
+    ],
+    "data": {
+      "age_range": {
+        "confidence": "medium",
+        "reason": "Adult facial proportions and full, healthy coat are visible; exact age cannot be determined from photo without dental examination and full body assessment",
+        "value": "Adult (1–7 years)"
+      },
+      "animal_count": 2,
+      "animal_detected": true,
+      "breed": {
+        "confidence": "medium",
+        "reason": "Distinct colorpoint pattern (darker seal/chocolate face and ears with cream-colored body) and fluffy medium-length coat are clearly visible; these characteristics suggest a colorpoint breed, but specific breed cannot be definitively determined from this single angle",
+        "value": "Colorpoint mix (possibly Ragdoll, Birman, or Tonkinese)"
+      },
+      "care_requirements": [
+        "Regular litter box maintenance",
+        "Daily feeding and fresh water",
+        "Regular grooming (fluffy coat requires brushing to prevent matting and tangles)",
+        "Environmental enrichment (scratching posts, climbing structures, play toys)",
+        "Regular veterinary care including vaccinations and wellness checks"
+      ],
+      "fee_tier": "Standard",
+      "fee_tier_reason": "Adult cat appears healthy with no visible signs of age-related issues or medical concerns. Fee tier may be adjusted to 'Bonded Pair' if staff confirms this cat and dog must be adopted together.",
+      "human_review": true,
+      "image_quality": "good",
+      "personality": "Looks relaxed and content, resting peacefully alongside a canine companion. This calm, settled posture suggests an easygoing and social temperament.",
+      "review_reasons": [
+        "Two animals present in photo—a dog is visible resting with the cat; staff should assess and confirm whether these are a bonded pair requiring co-adoption (if bonded, change fee_tier to 'Bonded Pair')",
+        "Breed cannot be definitively identified—colorpoint coloring and fluffiness visible but staff knowledge of cat's background may help confirm breed",
+        "Bonded pair status is critical for adoption—image filename 'duo.jpg' suggests possible pairing; staff review required",
+        "2 animals in frame. Confirm which pet this listing is for."
+      ],
+      "size": {
+        "confidence": "high",
+        "reason": "Body proportions and posture consistent with typical domestic adult cat size",
+        "value": "Medium"
+      },
+      "species": {
+        "confidence": "high",
+        "reason": "Feline facial features, body structure, and posture are clearly visible",
+        "value": "Cat"
+      },
+      "suggested_names": [
+        "Luna",
+        "Aspen",
+        "Sage"
+      ],
+      "unknowns": [
+        "Exact breed—colorpoint pattern is clear but specific breed cannot be confirmed from photo alone",
+        "Precise age—appears adult but full assessment required",
+        "Full health status—no obvious concerns visible, but professional veterinary evaluation needed"
+      ]
+    }
+  },
+  "empty": {
+    "calls": [
+      {
+        "attempts": 1,
+        "cost_usd": 0.025808499999999998,
+        "latency_ms": 13743,
+        "model": "claude-haiku-4-5-20251001",
+        "prompt_version": "v2",
+        "provider": "claude",
+        "raw": "```json\n{\n  \"animal_detected\": false,\n  \"animal_count\": 0,\n  \"image_quality\": \"good\",\n  \"suggested_names\": [],\n  \"species\": {\n    \"value\": \"unknown\",\n    \"confidence\": \"low\",\n    \"reason\": \"No animal is visible in this image.\"\n  },\n  \"breed\": {\n    \"value\": \"unknown\",\n    \"confidence\": \"low\",\n    \"reason\": \"No animal is visible in this image.\"\n  },\n  \"age_range\": {\n    \"value\": \"unknown\",\n    \"confidence\": \"low\",\n    \"reason\": \"No animal is visible in this image.\"\n  },\n  \"size\": {\n    \"value\": \"unknown\",\n    \"confidence\": \"low\",\n    \"reason\": \"No animal is visible in this image.\"\n  },\n  \"personality\": \"This photo does not contain an animal. The image shows an empty park bench overlooking a scenic river landscape at dusk. Please upload a photo of the animal available for adoption.\",\n  \"care_requirements\": [],\n  \"fee_tier\": \"Needs Assessment\",\n  \"fee_tier_reason\": \"No animal was detected in the uploaded photo. A valid animal photo is required to assess species, age, and health status before determining an appropriate fee tier.\",\n  \"unknowns\": [\n    \"Species cannot be determined—no animal visible\",\n    \"Breed cannot be determined—no animal visible\",\n    \"Age range cannot be determined—no animal visible\",\n    \"Size cannot be determined—no animal visible\"\n  ],\n  \"human_review\": true,\n  \"review_reasons\": [\n    \"No animal detected in the image—volunteer may have uploaded the wrong photo or placeholder\",\n    \"All classification fields set to unknown due to absence of animal\"\n  ]\n}\n```",
+        "system": "You are PawsConnect's listing assistant. A shelter volunteer uploaded ONE photo. Draft an honest adoption listing.\n\nRULES\n- Describe only what is visible. Never invent history, medical status, or behavior the photo cannot show.\n- Each of species, breed, age_range, size gets value + confidence + reason (the visual evidence).\n  confidence: high = clearly visible, unambiguous; medium = plausible but could be wrong; low = a guess.\n- FALLBACK (do not skip): if a field cannot be determined, set value to \"unknown\", confidence \"low\", and\n  explain why in reason (e.g. \"face not visible\", \"image too blurry\"). NEVER guess a breed to fill the field:\n  \"mixed breed (visual guess: ...)\" with low confidence is acceptable, a confident wrong breed is not.\n- No animal visible: animal_detected=false, animal_count=0, every field \"unknown\", empty names/care,\n  fee_tier \"Needs Assessment\", personality explains that no animal was found.\n- More than one animal: set animal_count, describe the most prominent one, and add a review reason\n  asking staff whether this is a bonded pair (fee_tier \"Bonded Pair\" only if they clearly belong together).\n- Poor image quality: image_quality \"poor\" and lower the confidence of every affected field.\n- personality: 2-3 warm, honest sentences for adopters. Based on visible cues only (posture, expression),\n  phrased as impressions (\"looks relaxed\"), no guilt-tripping or manipulative urgency.\n- care_requirements: 2-5 practical needs implied by species/size/age, generic if uncertain.\n- fee_tier: Standard (healthy adult), Senior Special (looks 8+ years), Bonded Pair, Needs Assessment\n  (uncertain species/health or no animal). Explain in fee_tier_reason.\n- suggested_names: up to 3 friendly names.\n- human_review = true if ANY field has low confidence, image_quality is poor, animal_count != 1, or no animal.\n  List each trigger in review_reasons.\n",
+        "user": "Draft the adoption listing for this photo. Follow every rule, especially the fallback rule."
+      }
+    ],
+    "data": {
+      "age_range": {
+        "confidence": "low",
+        "reason": "No animal is visible in this image.",
+        "value": "unknown"
+      },
+      "animal_count": 0,
+      "animal_detected": false,
+      "breed": {
+        "confidence": "low",
+        "reason": "No animal is visible in this image.",
+        "value": "unknown"
+      },
+      "care_requirements": [],
+      "fee_tier": "Needs Assessment",
+      "fee_tier_reason": "No animal was detected in the uploaded photo. A valid animal photo is required to assess species, age, and health status before determining an appropriate fee tier.",
+      "human_review": true,
+      "image_quality": "good",
+      "personality": "This photo does not contain an animal. The image shows an empty park bench overlooking a scenic river landscape at dusk. Please upload a photo of the animal available for adoption.",
+      "review_reasons": [
+        "No animal detected in the image—volunteer may have uploaded the wrong photo or placeholder",
+        "All classification fields set to unknown due to absence of animal",
+        "Species is low confidence: No animal is visible in this image.",
+        "Breed is low confidence: No animal is visible in this image.",
+        "Size is low confidence: No animal is visible in this image.",
+        "No animal detected in the photo."
+      ],
+      "size": {
+        "confidence": "low",
+        "reason": "No animal is visible in this image.",
+        "value": "unknown"
+      },
+      "species": {
+        "confidence": "low",
+        "reason": "No animal is visible in this image.",
+        "value": "unknown"
+      },
+      "suggested_names": [],
+      "unknowns": [
+        "Species cannot be determined—no animal visible",
+        "Breed cannot be determined—no animal visible",
+        "Age range cannot be determined—no animal visible",
+        "Size cannot be determined—no animal visible"
+      ]
+    }
+  },
+  "luna": {
+    "calls": [
+      {
+        "attempts": 1,
+        "cost_usd": 0.038643300000000005,
+        "latency_ms": 39530,
+        "model": "claude-haiku-4-5-20251001",
+        "prompt_version": "v2",
+        "provider": "claude",
+        "raw": "```json\n{\n  \"animal_detected\": true,\n  \"animal_count\": 1,\n  \"image_quality\": \"good\",\n  \"suggested_names\": [\"Luna\", \"Tawny\", \"Tiger\"],\n  \"species\": {\n    \"value\": \"cat\",\n    \"confidence\": \"high\",\n    \"reason\": \"Clear domestic feline features: pointed ears, whisker pads, feline face shape, and overall body structure unmistakably identify this as a cat.\"\n  },\n  \"breed\": {\n    \"value\": \"mixed breed (visual guess: tabby)\",\n    \"confidence\": \"medium\",\n    \"reason\": \"Classic tabby striping pattern throughout the body with brown and tan coloring. Tabby markings are clearly visible, but specific breed or pedigree status cannot be determined from appearance alone.\"\n  },\n  \"age_range\": {\n    \"value\": \"Adult (approximately 2-6 years old)\",\n    \"confidence\": \"medium\",\n    \"reason\": \"Alert, bright eyes and robust adult build suggest adulthood. No visible gray in coat or signs of advanced age. Sitting posture is upright and engaged. Exact age cannot be determined from photo alone.\"\n  },\n  \"size\": {\n    \"value\": \"Medium\",\n    \"confidence\": \"medium\",\n    \"reason\": \"Body proportions consistent with a standard domestic cat size. Sitting position makes precise size assessment difficult, but frame appears to be average adult cat dimensions.\"\n  },\n  \"personality\": \"Luna presents with quiet confidence—her alert posture and direct gaze suggest a cat who's comfortable and observant. She looks calm and collected, with an attentive presence that draws you in without demanding attention.\",\n  \"care_requirements\": [\n    \"Daily feeding with balanced cat food and fresh water\",\n    \"Regular litter box maintenance and cleaning\",\n    \"Environmental enrichment (toys, climbing areas, window perches for observation)\",\n    \"Routine veterinary care, vaccinations, and parasite prevention\",\n    \"Regular interactive playtime and handling\"\n  ],\n  \"fee_tier\": \"Standard\",\n  \"fee_tier_reason\": \"Luna appears to be a healthy adult cat with no visible signs of age-related concerns or health issues. Standard adoption fee applies.\",\n  \"unknowns\": [],\n  \"human_review\": false,\n  \"review_reasons\": []\n}\n```",
+        "system": "You are PawsConnect's listing assistant. A shelter volunteer uploaded ONE photo. Draft an honest adoption listing.\n\nRULES\n- Describe only what is visible. Never invent history, medical status, or behavior the photo cannot show.\n- Each of species, breed, age_range, size gets value + confidence + reason (the visual evidence).\n  confidence: high = clearly visible, unambiguous; medium = plausible but could be wrong; low = a guess.\n- FALLBACK (do not skip): if a field cannot be determined, set value to \"unknown\", confidence \"low\", and\n  explain why in reason (e.g. \"face not visible\", \"image too blurry\"). NEVER guess a breed to fill the field:\n  \"mixed breed (visual guess: ...)\" with low confidence is acceptable, a confident wrong breed is not.\n- No animal visible: animal_detected=false, animal_count=0, every field \"unknown\", empty names/care,\n  fee_tier \"Needs Assessment\", personality explains that no animal was found.\n- More than one animal: set animal_count, describe the most prominent one, and add a review reason\n  asking staff whether this is a bonded pair (fee_tier \"Bonded Pair\" only if they clearly belong together).\n- Poor image quality: image_quality \"poor\" and lower the confidence of every affected field.\n- personality: 2-3 warm, honest sentences for adopters. Based on visible cues only (posture, expression),\n  phrased as impressions (\"looks relaxed\"), no guilt-tripping or manipulative urgency.\n- care_requirements: 2-5 practical needs implied by species/size/age, generic if uncertain.\n- fee_tier: Standard (healthy adult), Senior Special (looks 8+ years), Bonded Pair, Needs Assessment\n  (uncertain species/health or no animal). Explain in fee_tier_reason.\n- suggested_names: up to 3 friendly names.\n- human_review = true if ANY field has low confidence, image_quality is poor, animal_count != 1, or no animal.\n  List each trigger in review_reasons.\n",
+        "user": "Draft the adoption listing for this photo. Follow every rule, especially the fallback rule."
+      }
+    ],
+    "data": {
+      "age_range": {
+        "confidence": "medium",
+        "reason": "Alert, bright eyes and robust adult build suggest adulthood. No visible gray in coat or signs of advanced age. Sitting posture is upright and engaged. Exact age cannot be determined from photo alone.",
+        "value": "Adult (approximately 2-6 years old)"
+      },
+      "animal_count": 1,
+      "animal_detected": true,
+      "breed": {
+        "confidence": "medium",
+        "reason": "Classic tabby striping pattern throughout the body with brown and tan coloring. Tabby markings are clearly visible, but specific breed or pedigree status cannot be determined from appearance alone.",
+        "value": "mixed breed (visual guess: tabby)"
+      },
+      "care_requirements": [
+        "Daily feeding with balanced cat food and fresh water",
+        "Regular litter box maintenance and cleaning",
+        "Environmental enrichment (toys, climbing areas, window perches for observation)",
+        "Routine veterinary care, vaccinations, and parasite prevention",
+        "Regular interactive playtime and handling"
+      ],
+      "fee_tier": "Standard",
+      "fee_tier_reason": "Luna appears to be a healthy adult cat with no visible signs of age-related concerns or health issues. Standard adoption fee applies.",
+      "human_review": false,
+      "image_quality": "good",
+      "personality": "Luna presents with quiet confidence—her alert posture and direct gaze suggest a cat who's comfortable and observant. She looks calm and collected, with an attentive presence that draws you in without demanding attention.",
+      "review_reasons": [],
+      "size": {
+        "confidence": "medium",
+        "reason": "Body proportions consistent with a standard domestic cat size. Sitting position makes precise size assessment difficult, but frame appears to be average adult cat dimensions.",
+        "value": "Medium"
+      },
+      "species": {
+        "confidence": "high",
+        "reason": "Clear domestic feline features: pointed ears, whisker pads, feline face shape, and overall body structure unmistakably identify this as a cat.",
+        "value": "cat"
+      },
+      "suggested_names": [
+        "Luna",
+        "Tawny",
+        "Tiger"
+      ],
+      "unknowns": []
+    }
+  },
+  "pepper": {
+    "calls": [
+      {
+        "attempts": 1,
+        "cost_usd": 0.1369973,
+        "latency_ms": 35893,
+        "model": "claude-haiku-4-5-20251001",
+        "prompt_version": "v2",
+        "provider": "claude",
+        "raw": "```json\n{\n  \"animal_detected\": true,\n  \"animal_count\": 1,\n  \"image_quality\": \"good\",\n  \"suggested_names\": [\"Pepper\", \"Buddy\", \"Duke\"],\n  \"species\": {\n    \"value\": \"Dog\",\n    \"confidence\": \"high\",\n    \"reason\": \"Canine features clearly visible: floppy ears, muzzle shape, body structure typical of domesticated dog.\"\n  },\n  \"breed\": {\n    \"value\": \"Labrador Retriever\",\n    \"confidence\": \"high\",\n    \"reason\": \"Light golden/cream coat, floppy ears, broad head, body structure, and overall morphology are characteristic of a yellow Labrador Retriever.\"\n  },\n  \"age_range\": {\n    \"value\": \"Senior (8+ years)\",\n    \"confidence\": \"medium\",\n    \"reason\": \"Prominent facial graying around muzzle and eyes with light facial features typical of senior dogs. Clear aging signs visible, but exact age cannot be determined from photo alone.\"\n  },\n  \"size\": {\n    \"value\": \"Large (50-80 lbs)\",\n    \"confidence\": \"high\",\n    \"reason\": \"Body structure, bone proportions, and overall frame are consistent with a large breed dog. Labrador Retrievers typically fall in this weight range.\"\n  },\n  \"personality\": \"This gentle soul has a calm, peaceful demeanor. With a soft gaze and relaxed posture, they appear content and serene—a wonderful companion for someone seeking a steady, grounded presence.\",\n  \"care_requirements\": [\n    \"Regular, moderate exercise appropriate for senior dogs (leisurely walks preferred)\",\n    \"Joint-friendly environment with comfortable resting areas\",\n    \"Large-breed, senior-appropriate diet\",\n    \"Routine veterinary care and health monitoring\",\n    \"Patience with possible age-related needs\"\n  ],\n  \"fee_tier\": \"Senior Special\",\n  \"fee_tier_reason\": \"Prominent facial graying and physical appearance indicate a senior dog (8+ years old), making them eligible for Senior Special adoption fee to encourage placement into a loving home.\",\n  \"unknowns\": [],\n  \"human_review\": false,\n  \"review_reasons\": []\n}\n```",
+        "system": "You are PawsConnect's listing assistant. A shelter volunteer uploaded ONE photo. Draft an honest adoption listing.\n\nRULES\n- Describe only what is visible. Never invent history, medical status, or behavior the photo cannot show.\n- Each of species, breed, age_range, size gets value + confidence + reason (the visual evidence).\n  confidence: high = clearly visible, unambiguous; medium = plausible but could be wrong; low = a guess.\n- FALLBACK (do not skip): if a field cannot be determined, set value to \"unknown\", confidence \"low\", and\n  explain why in reason (e.g. \"face not visible\", \"image too blurry\"). NEVER guess a breed to fill the field:\n  \"mixed breed (visual guess: ...)\" with low confidence is acceptable, a confident wrong breed is not.\n- No animal visible: animal_detected=false, animal_count=0, every field \"unknown\", empty names/care,\n  fee_tier \"Needs Assessment\", personality explains that no animal was found.\n- More than one animal: set animal_count, describe the most prominent one, and add a review reason\n  asking staff whether this is a bonded pair (fee_tier \"Bonded Pair\" only if they clearly belong together).\n- Poor image quality: image_quality \"poor\" and lower the confidence of every affected field.\n- personality: 2-3 warm, honest sentences for adopters. Based on visible cues only (posture, expression),\n  phrased as impressions (\"looks relaxed\"), no guilt-tripping or manipulative urgency.\n- care_requirements: 2-5 practical needs implied by species/size/age, generic if uncertain.\n- fee_tier: Standard (healthy adult), Senior Special (looks 8+ years), Bonded Pair, Needs Assessment\n  (uncertain species/health or no animal). Explain in fee_tier_reason.\n- suggested_names: up to 3 friendly names.\n- human_review = true if ANY field has low confidence, image_quality is poor, animal_count != 1, or no animal.\n  List each trigger in review_reasons.\n",
+        "user": "Draft the adoption listing for this photo. Follow every rule, especially the fallback rule."
+      }
+    ],
+    "data": {
+      "age_range": {
+        "confidence": "medium",
+        "reason": "Prominent facial graying around muzzle and eyes with light facial features typical of senior dogs. Clear aging signs visible, but exact age cannot be determined from photo alone.",
+        "value": "Senior (8+ years)"
+      },
+      "animal_count": 1,
+      "animal_detected": true,
+      "breed": {
+        "confidence": "high",
+        "reason": "Light golden/cream coat, floppy ears, broad head, body structure, and overall morphology are characteristic of a yellow Labrador Retriever.",
+        "value": "Labrador Retriever"
+      },
+      "care_requirements": [
+        "Regular, moderate exercise appropriate for senior dogs (leisurely walks preferred)",
+        "Joint-friendly environment with comfortable resting areas",
+        "Large-breed, senior-appropriate diet",
+        "Routine veterinary care and health monitoring",
+        "Patience with possible age-related needs"
+      ],
+      "fee_tier": "Senior Special",
+      "fee_tier_reason": "Prominent facial graying and physical appearance indicate a senior dog (8+ years old), making them eligible for Senior Special adoption fee to encourage placement into a loving home.",
+      "human_review": false,
+      "image_quality": "good",
+      "personality": "This gentle soul has a calm, peaceful demeanor. With a soft gaze and relaxed posture, they appear content and serene—a wonderful companion for someone seeking a steady, grounded presence.",
+      "review_reasons": [],
+      "size": {
+        "confidence": "high",
+        "reason": "Body structure, bone proportions, and overall frame are consistent with a large breed dog. Labrador Retrievers typically fall in this weight range.",
+        "value": "Large (50-80 lbs)"
+      },
+      "species": {
+        "confidence": "high",
+        "reason": "Canine features clearly visible: floppy ears, muzzle shape, body structure typical of domesticated dog.",
+        "value": "Dog"
+      },
+      "suggested_names": [
+        "Pepper",
+        "Buddy",
+        "Duke"
+      ],
+      "unknowns": []
+    }
+  },
+  "rocco": {
+    "calls": [
+      {
+        "attempts": 1,
+        "cost_usd": 0.1397893,
+        "latency_ms": 47174,
+        "model": "claude-haiku-4-5-20251001",
+        "prompt_version": "v2",
+        "provider": "claude",
+        "raw": "```json\n{\n  \"animal_detected\": true,\n  \"animal_count\": 1,\n  \"image_quality\": \"good\",\n  \"suggested_names\": [\"Rocco\", \"Bruno\", \"Copper\"],\n  \"species\": {\n    \"value\": \"dog\",\n    \"confidence\": \"high\",\n    \"reason\": \"Clearly a canine with typical dog morphology: four legs, fur coat, tail, and characteristic facial structure.\"\n  },\n  \"breed\": {\n    \"value\": \"Pit Bull type (possible American Pit Bull Terrier or Staffordshire Terrier mix)\",\n    \"confidence\": \"medium\",\n    \"reason\": \"Strong athletic build, muscular frame, characteristic head shape with medium ears, and overall proportions typical of pit bull breeds. Exact breed composition and ancestry cannot be confirmed from photo alone.\"\n  },\n  \"age_range\": {\n    \"value\": \"Adult\",\n    \"confidence\": \"medium\",\n    \"reason\": \"Excellent muscle tone, bright clear eyes, alert posture, and no visible muzzle graying or age-related wear suggest adult in prime condition. Specific age cannot be determined from appearance alone.\"\n  },\n  \"size\": {\n    \"value\": \"Medium-Large\",\n    \"confidence\": \"high\",\n    \"reason\": \"Athletic proportions with muscular build and long legs clearly indicate medium-large frame, likely 45-70 lbs based on structural dimensions.\"\n  },\n  \"personality\": \"Rocco presents as an alert, observant companion with a calm, steady presence. His attentive gaze and confident stance suggest a dog who's ready for an active lifestyle and genuinely engaged with his world.\",\n  \"care_requirements\": [\n    \"Regular vigorous exercise daily (this athletic build needs 2+ hours of activity)\",\n    \"Positive reinforcement training and consistent socialization\",\n    \"Sturdy leash and secure fencing for safety\",\n    \"Routine veterinary care and wellness checks\",\n    \"Mental enrichment through play and interactive activities\"\n  ],\n  \"fee_tier\": \"Standard\",\n  \"fee_tier_reason\": \"Healthy adult dog with good muscle tone and alert demeanor; no obvious medical or behavioral concerns visible in photo.\",\n  \"unknowns\": [\n    \"Exact breed composition and ancestry\",\n    \"Specific age (adult range estimated from appearance only)\",\n    \"Medical history, vaccinations, and health status\",\n    \"Behavioral assessment and prior training\"\n  ],\n  \"human_review\": true,\n  \"review_reasons\": [\n    \"Breed identification has medium confidence; staff should verify breed type, pedigree, or confirm mixed breed status\",\n    \"Age is estimated from visual appearance only; actual documented age should be verified\",\n    \"Pit bull type dogs should have documented behavioral assessment to ensure appropriate adoption match\"\n  ]\n}\n```",
+        "system": "You are PawsConnect's listing assistant. A shelter volunteer uploaded ONE photo. Draft an honest adoption listing.\n\nRULES\n- Describe only what is visible. Never invent history, medical status, or behavior the photo cannot show.\n- Each of species, breed, age_range, size gets value + confidence + reason (the visual evidence).\n  confidence: high = clearly visible, unambiguous; medium = plausible but could be wrong; low = a guess.\n- FALLBACK (do not skip): if a field cannot be determined, set value to \"unknown\", confidence \"low\", and\n  explain why in reason (e.g. \"face not visible\", \"image too blurry\"). NEVER guess a breed to fill the field:\n  \"mixed breed (visual guess: ...)\" with low confidence is acceptable, a confident wrong breed is not.\n- No animal visible: animal_detected=false, animal_count=0, every field \"unknown\", empty names/care,\n  fee_tier \"Needs Assessment\", personality explains that no animal was found.\n- More than one animal: set animal_count, describe the most prominent one, and add a review reason\n  asking staff whether this is a bonded pair (fee_tier \"Bonded Pair\" only if they clearly belong together).\n- Poor image quality: image_quality \"poor\" and lower the confidence of every affected field.\n- personality: 2-3 warm, honest sentences for adopters. Based on visible cues only (posture, expression),\n  phrased as impressions (\"looks relaxed\"), no guilt-tripping or manipulative urgency.\n- care_requirements: 2-5 practical needs implied by species/size/age, generic if uncertain.\n- fee_tier: Standard (healthy adult), Senior Special (looks 8+ years), Bonded Pair, Needs Assessment\n  (uncertain species/health or no animal). Explain in fee_tier_reason.\n- suggested_names: up to 3 friendly names.\n- human_review = true if ANY field has low confidence, image_quality is poor, animal_count != 1, or no animal.\n  List each trigger in review_reasons.\n",
+        "user": "Draft the adoption listing for this photo. Follow every rule, especially the fallback rule."
+      }
+    ],
+    "data": {
+      "age_range": {
+        "confidence": "medium",
+        "reason": "Excellent muscle tone, bright clear eyes, alert posture, and no visible muzzle graying or age-related wear suggest adult in prime condition. Specific age cannot be determined from appearance alone.",
+        "value": "Adult"
+      },
+      "animal_count": 1,
+      "animal_detected": true,
+      "breed": {
+        "confidence": "medium",
+        "reason": "Strong athletic build, muscular frame, characteristic head shape with medium ears, and overall proportions typical of pit bull breeds. Exact breed composition and ancestry cannot be confirmed from photo alone.",
+        "value": "Pit Bull type (possible American Pit Bull Terrier or Staffordshire Terrier mix)"
+      },
+      "care_requirements": [
+        "Regular vigorous exercise daily (this athletic build needs 2+ hours of activity)",
+        "Positive reinforcement training and consistent socialization",
+        "Sturdy leash and secure fencing for safety",
+        "Routine veterinary care and wellness checks",
+        "Mental enrichment through play and interactive activities"
+      ],
+      "fee_tier": "Standard",
+      "fee_tier_reason": "Healthy adult dog with good muscle tone and alert demeanor; no obvious medical or behavioral concerns visible in photo.",
+      "human_review": true,
+      "image_quality": "good",
+      "personality": "Rocco presents as an alert, observant companion with a calm, steady presence. His attentive gaze and confident stance suggest a dog who's ready for an active lifestyle and genuinely engaged with his world.",
+      "review_reasons": [
+        "Breed identification has medium confidence; staff should verify breed type, pedigree, or confirm mixed breed status",
+        "Age is estimated from visual appearance only; actual documented age should be verified",
+        "Pit bull type dogs should have documented behavioral assessment to ensure appropriate adoption match"
+      ],
+      "size": {
+        "confidence": "high",
+        "reason": "Athletic proportions with muscular build and long legs clearly indicate medium-large frame, likely 45-70 lbs based on structural dimensions.",
+        "value": "Medium-Large"
+      },
+      "species": {
+        "confidence": "high",
+        "reason": "Clearly a canine with typical dog morphology: four legs, fur coat, tail, and characteristic facial structure.",
+        "value": "dog"
+      },
+      "suggested_names": [
+        "Rocco",
+        "Bruno",
+        "Copper"
+      ],
+      "unknowns": [
+        "Exact breed composition and ancestry",
+        "Specific age (adult range estimated from appearance only)",
+        "Medical history, vaccinations, and health status",
+        "Behavioral assessment and prior training"
+      ]
+    }
+  }
+}

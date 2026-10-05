@@ -1,0 +1,242 @@
+{
+  "m1": {
+    "calls": [
+      {
+        "attempts": 1,
+        "cost_usd": 0.0157063,
+        "latency_ms": 8827,
+        "model": "claude-haiku-4-5-20251001",
+        "prompt_version": "v2",
+        "provider": "claude",
+        "raw": "```json\n{\"category\": \"adoption_application\", \"urgency\": \"P3\", \"suggested_routing\": \"Adoption counselor\", \"summary\": \"Applicant seeks to add information to their application for Biscuit and schedule a meet.\", \"reason\": \"'submitted the form for Biscuit', 'add that we have a fenced yard', 'when could we meet him' = adoption application scheduling with additional details.\", \"confidence\": \"high\", \"human_review\": false}\n```",
+        "system": "You are the inbox triage system for PawsConnect, a pet adoption platform. Turn ONE free-text message into a record.\n\nALLOWED CATEGORIES (use exactly one):\n- adoption_application: about applying for / meeting / adopting a specific pet, or an application already filed\n- medical_question: health of an animal (adopted or listed), symptoms, meds, vet care\n- surrender_request: someone needs to give up an animal, or reports a found/stray/abandoned animal needing intake\n- foster_volunteer_offer: offers to foster, volunteer, or foster-to-adopt\n- general_question: hours, fees, policies, donations, logistics\n- spam_other: promotions, scams, irrelevant\n\nURGENCY:\n- P1 Urgent (same hour): an animal's life or welfare is at immediate risk (collapse, can't stand, bleeding, trapped, no water/heat).\n- P2 High (same day): hard deadline within ~72h (eviction, move), or an animal at risk soon.\n- P3 Normal (1-2 days): applications, foster offers, non-urgent health questions.\n- P4 Low (when convenient): general info, donations, spam.\n\nROUTING: one of \"Emergency on-call (vet tech)\", \"Intake coordinator\", \"Adoption counselor\", \"Foster coordinator\",\n\"Front desk\", \"Trust & Safety (spam)\". If a message mixes needs, route by the most urgent need.\n\nReturn: category, urgency, suggested_routing, summary (one sentence), reason (quote the words that drove the\ndecision), confidence (high/medium/low), human_review (true if confidence is not high, the message mixes\ncategories, or urgency is P1).\n\nEXAMPLES\nMessage: \"Can I come see Milo on Saturday? Our application was approved Tuesday.\"\n-> {\"category\":\"adoption_application\",\"urgency\":\"P3\",\"suggested_routing\":\"Adoption counselor\",\"summary\":\"Approved applicant wants to schedule a Saturday visit with Milo.\",\"reason\":\"'application was approved' and 'come see Milo' = adoption scheduling; no deadline or risk.\",\"confidence\":\"high\",\"human_review\":false}\n\nMessage: \"The kitten we adopted yesterday is having trouble breathing and her gums look pale.\"\n-> {\"category\":\"medical_question\",\"urgency\":\"P1\",\"suggested_routing\":\"Emergency on-call (vet tech)\",\"summary\":\"Newly adopted kitten has breathing trouble and pale gums.\",\"reason\":\"'trouble breathing' and 'gums look pale' are emergency signs.\",\"confidence\":\"high\",\"human_review\":true}\n\nMessage: \"We're moving overseas next week and can't take our rabbit. Please help.\"\n-> {\"category\":\"surrender_request\",\"urgency\":\"P2\",\"suggested_routing\":\"Intake coordinator\",\"summary\":\"Owner moving overseas next week needs to surrender a rabbit.\",\"reason\":\"'can't take our rabbit' = surrender; 'next week' is a near deadline.\",\"confidence\":\"high\",\"human_review\":false}\n\nMessage: \"I'd love to foster Coco, and is her cough getting better?\"\n-> {\"category\":\"foster_volunteer_offer\",\"urgency\":\"P3\",\"suggested_routing\":\"Foster coordinator\",\"summary\":\"Person offers to foster Coco and asks about her cough.\",\"reason\":\"Primary intent 'love to foster'; secondary medical question about 'her cough' is not an emergency.\",\"confidence\":\"medium\",\"human_review\":true}\n",
+        "user": "Message: \"Hi! I submitted the form for Biscuit last night but wanted to add that we have a fenced yard and I work from home. When could we meet him?\"\nReturn the triage record JSON."
+      }
+    ],
+    "data": {
+      "category": "adoption_application",
+      "confidence": "high",
+      "human_review": false,
+      "reason": "'submitted the form for Biscuit', 'add that we have a fenced yard', 'when could we meet him' = adoption application scheduling with additional details.",
+      "suggested_routing": "Adoption counselor",
+      "summary": "Applicant seeks to add information to their application for Biscuit and schedule a meet.",
+      "urgency": "P3"
+    }
+  },
+  "m10": {
+    "calls": [
+      {
+        "attempts": 1,
+        "cost_usd": 0.125348,
+        "latency_ms": 8873,
+        "model": "claude-haiku-4-5-20251001",
+        "prompt_version": "v2",
+        "provider": "claude",
+        "raw": "```json\n{\"category\":\"general_question\",\"urgency\":\"P4\",\"suggested_routing\":\"Front desk\",\"summary\":\"Donor offers 20 bags of dog food and a crate, asking about pickup or drop-off options.\",\"reason\":\"'donate 20 bags of dog food and an old crate' and 'Do you guys pick up, or where should I drop it?' = donation logistics and facility policies.\",\"confidence\":\"high\",\"human_review\":false}\n```",
+        "system": "You are the inbox triage system for PawsConnect, a pet adoption platform. Turn ONE free-text message into a record.\n\nALLOWED CATEGORIES (use exactly one):\n- adoption_application: about applying for / meeting / adopting a specific pet, or an application already filed\n- medical_question: health of an animal (adopted or listed), symptoms, meds, vet care\n- surrender_request: someone needs to give up an animal, or reports a found/stray/abandoned animal needing intake\n- foster_volunteer_offer: offers to foster, volunteer, or foster-to-adopt\n- general_question: hours, fees, policies, donations, logistics\n- spam_other: promotions, scams, irrelevant\n\nURGENCY:\n- P1 Urgent (same hour): an animal's life or welfare is at immediate risk (collapse, can't stand, bleeding, trapped, no water/heat).\n- P2 High (same day): hard deadline within ~72h (eviction, move), or an animal at risk soon.\n- P3 Normal (1-2 days): applications, foster offers, non-urgent health questions.\n- P4 Low (when convenient): general info, donations, spam.\n\nROUTING: one of \"Emergency on-call (vet tech)\", \"Intake coordinator\", \"Adoption counselor\", \"Foster coordinator\",\n\"Front desk\", \"Trust & Safety (spam)\". If a message mixes needs, route by the most urgent need.\n\nReturn: category, urgency, suggested_routing, summary (one sentence), reason (quote the words that drove the\ndecision), confidence (high/medium/low), human_review (true if confidence is not high, the message mixes\ncategories, or urgency is P1).\n\nEXAMPLES\nMessage: \"Can I come see Milo on Saturday? Our application was approved Tuesday.\"\n-> {\"category\":\"adoption_application\",\"urgency\":\"P3\",\"suggested_routing\":\"Adoption counselor\",\"summary\":\"Approved applicant wants to schedule a Saturday visit with Milo.\",\"reason\":\"'application was approved' and 'come see Milo' = adoption scheduling; no deadline or risk.\",\"confidence\":\"high\",\"human_review\":false}\n\nMessage: \"The kitten we adopted yesterday is having trouble breathing and her gums look pale.\"\n-> {\"category\":\"medical_question\",\"urgency\":\"P1\",\"suggested_routing\":\"Emergency on-call (vet tech)\",\"summary\":\"Newly adopted kitten has breathing trouble and pale gums.\",\"reason\":\"'trouble breathing' and 'gums look pale' are emergency signs.\",\"confidence\":\"high\",\"human_review\":true}\n\nMessage: \"We're moving overseas next week and can't take our rabbit. Please help.\"\n-> {\"category\":\"surrender_request\",\"urgency\":\"P2\",\"suggested_routing\":\"Intake coordinator\",\"summary\":\"Owner moving overseas next week needs to surrender a rabbit.\",\"reason\":\"'can't take our rabbit' = surrender; 'next week' is a near deadline.\",\"confidence\":\"high\",\"human_review\":false}\n\nMessage: \"I'd love to foster Coco, and is her cough getting better?\"\n-> {\"category\":\"foster_volunteer_offer\",\"urgency\":\"P3\",\"suggested_routing\":\"Foster coordinator\",\"summary\":\"Person offers to foster Coco and asks about her cough.\",\"reason\":\"Primary intent 'love to foster'; secondary medical question about 'her cough' is not an emergency.\",\"confidence\":\"medium\",\"human_review\":true}\n",
+        "user": "Message: \"Hey, I can donate 20 bags of dog food and an old crate. Do you guys pick up, or where should I drop it?\"\nReturn the triage record JSON."
+      }
+    ],
+    "data": {
+      "category": "general_question",
+      "confidence": "high",
+      "human_review": false,
+      "reason": "'donate 20 bags of dog food and an old crate' and 'Do you guys pick up, or where should I drop it?' = donation logistics and facility policies.",
+      "suggested_routing": "Front desk",
+      "summary": "Donor offers 20 bags of dog food and a crate, asking about pickup or drop-off options.",
+      "urgency": "P4"
+    }
+  },
+  "m2": {
+    "calls": [
+      {
+        "attempts": 1,
+        "cost_usd": 0.014335700000000002,
+        "latency_ms": 10150,
+        "model": "claude-haiku-4-5-20251001",
+        "prompt_version": "v2",
+        "provider": "claude",
+        "raw": "```json\n{\n  \"category\": \"medical_question\",\n  \"urgency\": \"P1\",\n  \"suggested_routing\": \"Emergency on-call (vet tech)\",\n  \"summary\": \"Recently adopted dog is vomiting and unable to stand; needs immediate veterinary care.\",\n  \"reason\": \"'vomiting since this morning and won't stand up' are acute emergency signs matching P1 criteria of animal at immediate risk.\",\n  \"confidence\": \"high\",\n  \"human_review\": true\n}\n```",
+        "system": "You are the inbox triage system for PawsConnect, a pet adoption platform. Turn ONE free-text message into a record.\n\nALLOWED CATEGORIES (use exactly one):\n- adoption_application: about applying for / meeting / adopting a specific pet, or an application already filed\n- medical_question: health of an animal (adopted or listed), symptoms, meds, vet care\n- surrender_request: someone needs to give up an animal, or reports a found/stray/abandoned animal needing intake\n- foster_volunteer_offer: offers to foster, volunteer, or foster-to-adopt\n- general_question: hours, fees, policies, donations, logistics\n- spam_other: promotions, scams, irrelevant\n\nURGENCY:\n- P1 Urgent (same hour): an animal's life or welfare is at immediate risk (collapse, can't stand, bleeding, trapped, no water/heat).\n- P2 High (same day): hard deadline within ~72h (eviction, move), or an animal at risk soon.\n- P3 Normal (1-2 days): applications, foster offers, non-urgent health questions.\n- P4 Low (when convenient): general info, donations, spam.\n\nROUTING: one of \"Emergency on-call (vet tech)\", \"Intake coordinator\", \"Adoption counselor\", \"Foster coordinator\",\n\"Front desk\", \"Trust & Safety (spam)\". If a message mixes needs, route by the most urgent need.\n\nReturn: category, urgency, suggested_routing, summary (one sentence), reason (quote the words that drove the\ndecision), confidence (high/medium/low), human_review (true if confidence is not high, the message mixes\ncategories, or urgency is P1).\n\nEXAMPLES\nMessage: \"Can I come see Milo on Saturday? Our application was approved Tuesday.\"\n-> {\"category\":\"adoption_application\",\"urgency\":\"P3\",\"suggested_routing\":\"Adoption counselor\",\"summary\":\"Approved applicant wants to schedule a Saturday visit with Milo.\",\"reason\":\"'application was approved' and 'come see Milo' = adoption scheduling; no deadline or risk.\",\"confidence\":\"high\",\"human_review\":false}\n\nMessage: \"The kitten we adopted yesterday is having trouble breathing and her gums look pale.\"\n-> {\"category\":\"medical_question\",\"urgency\":\"P1\",\"suggested_routing\":\"Emergency on-call (vet tech)\",\"summary\":\"Newly adopted kitten has breathing trouble and pale gums.\",\"reason\":\"'trouble breathing' and 'gums look pale' are emergency signs.\",\"confidence\":\"high\",\"human_review\":true}\n\nMessage: \"We're moving overseas next week and can't take our rabbit. Please help.\"\n-> {\"category\":\"surrender_request\",\"urgency\":\"P2\",\"suggested_routing\":\"Intake coordinator\",\"summary\":\"Owner moving overseas next week needs to surrender a rabbit.\",\"reason\":\"'can't take our rabbit' = surrender; 'next week' is a near deadline.\",\"confidence\":\"high\",\"human_review\":false}\n\nMessage: \"I'd love to foster Coco, and is her cough getting better?\"\n-> {\"category\":\"foster_volunteer_offer\",\"urgency\":\"P3\",\"suggested_routing\":\"Foster coordinator\",\"summary\":\"Person offers to foster Coco and asks about her cough.\",\"reason\":\"Primary intent 'love to foster'; secondary medical question about 'her cough' is not an emergency.\",\"confidence\":\"medium\",\"human_review\":true}\n",
+        "user": "Message: \"I adopted Pepper's sister Daisy two weeks ago and she's been vomiting since this morning and won't stand up. What do I do??\"\nReturn the triage record JSON."
+      }
+    ],
+    "data": {
+      "category": "medical_question",
+      "confidence": "high",
+      "human_review": true,
+      "reason": "'vomiting since this morning and won't stand up' are acute emergency signs matching P1 criteria of animal at immediate risk.",
+      "suggested_routing": "Emergency on-call (vet tech)",
+      "summary": "Recently adopted dog is vomiting and unable to stand; needs immediate veterinary care.",
+      "urgency": "P1"
+    }
+  },
+  "m3": {
+    "calls": [
+      {
+        "attempts": 1,
+        "cost_usd": 0.0136867,
+        "latency_ms": 10121,
+        "model": "claude-haiku-4-5-20251001",
+        "prompt_version": "v2",
+        "provider": "claude",
+        "raw": "```json\n{\n  \"category\": \"surrender_request\",\n  \"urgency\": \"P2\",\n  \"suggested_routing\": \"Intake coordinator\",\n  \"summary\": \"Owner of 2 cats facing eviction by Friday requests emergency intake.\",\n  \"reason\": \"'get rid of my 2 cats by Friday' and 'evicted' indicate a hard deadline within days; 'Can you take them?' is a direct surrender request.\",\n  \"confidence\": \"high\",\n  \"human_review\": false\n}\n```",
+        "system": "You are the inbox triage system for PawsConnect, a pet adoption platform. Turn ONE free-text message into a record.\n\nALLOWED CATEGORIES (use exactly one):\n- adoption_application: about applying for / meeting / adopting a specific pet, or an application already filed\n- medical_question: health of an animal (adopted or listed), symptoms, meds, vet care\n- surrender_request: someone needs to give up an animal, or reports a found/stray/abandoned animal needing intake\n- foster_volunteer_offer: offers to foster, volunteer, or foster-to-adopt\n- general_question: hours, fees, policies, donations, logistics\n- spam_other: promotions, scams, irrelevant\n\nURGENCY:\n- P1 Urgent (same hour): an animal's life or welfare is at immediate risk (collapse, can't stand, bleeding, trapped, no water/heat).\n- P2 High (same day): hard deadline within ~72h (eviction, move), or an animal at risk soon.\n- P3 Normal (1-2 days): applications, foster offers, non-urgent health questions.\n- P4 Low (when convenient): general info, donations, spam.\n\nROUTING: one of \"Emergency on-call (vet tech)\", \"Intake coordinator\", \"Adoption counselor\", \"Foster coordinator\",\n\"Front desk\", \"Trust & Safety (spam)\". If a message mixes needs, route by the most urgent need.\n\nReturn: category, urgency, suggested_routing, summary (one sentence), reason (quote the words that drove the\ndecision), confidence (high/medium/low), human_review (true if confidence is not high, the message mixes\ncategories, or urgency is P1).\n\nEXAMPLES\nMessage: \"Can I come see Milo on Saturday? Our application was approved Tuesday.\"\n-> {\"category\":\"adoption_application\",\"urgency\":\"P3\",\"suggested_routing\":\"Adoption counselor\",\"summary\":\"Approved applicant wants to schedule a Saturday visit with Milo.\",\"reason\":\"'application was approved' and 'come see Milo' = adoption scheduling; no deadline or risk.\",\"confidence\":\"high\",\"human_review\":false}\n\nMessage: \"The kitten we adopted yesterday is having trouble breathing and her gums look pale.\"\n-> {\"category\":\"medical_question\",\"urgency\":\"P1\",\"suggested_routing\":\"Emergency on-call (vet tech)\",\"summary\":\"Newly adopted kitten has breathing trouble and pale gums.\",\"reason\":\"'trouble breathing' and 'gums look pale' are emergency signs.\",\"confidence\":\"high\",\"human_review\":true}\n\nMessage: \"We're moving overseas next week and can't take our rabbit. Please help.\"\n-> {\"category\":\"surrender_request\",\"urgency\":\"P2\",\"suggested_routing\":\"Intake coordinator\",\"summary\":\"Owner moving overseas next week needs to surrender a rabbit.\",\"reason\":\"'can't take our rabbit' = surrender; 'next week' is a near deadline.\",\"confidence\":\"high\",\"human_review\":false}\n\nMessage: \"I'd love to foster Coco, and is her cough getting better?\"\n-> {\"category\":\"foster_volunteer_offer\",\"urgency\":\"P3\",\"suggested_routing\":\"Foster coordinator\",\"summary\":\"Person offers to foster Coco and asks about her cough.\",\"reason\":\"Primary intent 'love to foster'; secondary medical question about 'her cough' is not an emergency.\",\"confidence\":\"medium\",\"human_review\":true}\n",
+        "user": "Message: \"My landlord says I have to get rid of my 2 cats by Friday or we're evicted. Can you take them? I don't know what else to do.\"\nReturn the triage record JSON."
+      }
+    ],
+    "data": {
+      "category": "surrender_request",
+      "confidence": "high",
+      "human_review": false,
+      "reason": "'get rid of my 2 cats by Friday' and 'evicted' indicate a hard deadline within days; 'Can you take them?' is a direct surrender request.",
+      "suggested_routing": "Intake coordinator",
+      "summary": "Owner of 2 cats facing eviction by Friday requests emergency intake.",
+      "urgency": "P2"
+    }
+  },
+  "m4": {
+    "calls": [
+      {
+        "attempts": 1,
+        "cost_usd": 0.014392700000000001,
+        "latency_ms": 10276,
+        "model": "claude-haiku-4-5-20251001",
+        "prompt_version": "v2",
+        "provider": "claude",
+        "raw": "```json\n{\"category\": \"foster_volunteer_offer\", \"urgency\": \"P3\", \"suggested_routing\": \"Foster coordinator\", \"summary\": \"Retired vet tech offers to foster senior and medical-need animals this winter and seeks sign-up information.\", \"reason\": \"'retired vet tech and would love to foster seniors or medical cases' and 'How do I sign up?' = foster volunteer offer; specialized expertise in medical care is valuable but no time-critical deadline.\", \"confidence\": \"high\", \"human_review\": false}\n```",
+        "system": "You are the inbox triage system for PawsConnect, a pet adoption platform. Turn ONE free-text message into a record.\n\nALLOWED CATEGORIES (use exactly one):\n- adoption_application: about applying for / meeting / adopting a specific pet, or an application already filed\n- medical_question: health of an animal (adopted or listed), symptoms, meds, vet care\n- surrender_request: someone needs to give up an animal, or reports a found/stray/abandoned animal needing intake\n- foster_volunteer_offer: offers to foster, volunteer, or foster-to-adopt\n- general_question: hours, fees, policies, donations, logistics\n- spam_other: promotions, scams, irrelevant\n\nURGENCY:\n- P1 Urgent (same hour): an animal's life or welfare is at immediate risk (collapse, can't stand, bleeding, trapped, no water/heat).\n- P2 High (same day): hard deadline within ~72h (eviction, move), or an animal at risk soon.\n- P3 Normal (1-2 days): applications, foster offers, non-urgent health questions.\n- P4 Low (when convenient): general info, donations, spam.\n\nROUTING: one of \"Emergency on-call (vet tech)\", \"Intake coordinator\", \"Adoption counselor\", \"Foster coordinator\",\n\"Front desk\", \"Trust & Safety (spam)\". If a message mixes needs, route by the most urgent need.\n\nReturn: category, urgency, suggested_routing, summary (one sentence), reason (quote the words that drove the\ndecision), confidence (high/medium/low), human_review (true if confidence is not high, the message mixes\ncategories, or urgency is P1).\n\nEXAMPLES\nMessage: \"Can I come see Milo on Saturday? Our application was approved Tuesday.\"\n-> {\"category\":\"adoption_application\",\"urgency\":\"P3\",\"suggested_routing\":\"Adoption counselor\",\"summary\":\"Approved applicant wants to schedule a Saturday visit with Milo.\",\"reason\":\"'application was approved' and 'come see Milo' = adoption scheduling; no deadline or risk.\",\"confidence\":\"high\",\"human_review\":false}\n\nMessage: \"The kitten we adopted yesterday is having trouble breathing and her gums look pale.\"\n-> {\"category\":\"medical_question\",\"urgency\":\"P1\",\"suggested_routing\":\"Emergency on-call (vet tech)\",\"summary\":\"Newly adopted kitten has breathing trouble and pale gums.\",\"reason\":\"'trouble breathing' and 'gums look pale' are emergency signs.\",\"confidence\":\"high\",\"human_review\":true}\n\nMessage: \"We're moving overseas next week and can't take our rabbit. Please help.\"\n-> {\"category\":\"surrender_request\",\"urgency\":\"P2\",\"suggested_routing\":\"Intake coordinator\",\"summary\":\"Owner moving overseas next week needs to surrender a rabbit.\",\"reason\":\"'can't take our rabbit' = surrender; 'next week' is a near deadline.\",\"confidence\":\"high\",\"human_review\":false}\n\nMessage: \"I'd love to foster Coco, and is her cough getting better?\"\n-> {\"category\":\"foster_volunteer_offer\",\"urgency\":\"P3\",\"suggested_routing\":\"Foster coordinator\",\"summary\":\"Person offers to foster Coco and asks about her cough.\",\"reason\":\"Primary intent 'love to foster'; secondary medical question about 'her cough' is not an emergency.\",\"confidence\":\"medium\",\"human_review\":true}\n",
+        "user": "Message: \"I'm a retired vet tech and would love to foster seniors or medical cases this winter. How do I sign up?\"\nReturn the triage record JSON."
+      }
+    ],
+    "data": {
+      "category": "foster_volunteer_offer",
+      "confidence": "high",
+      "human_review": false,
+      "reason": "'retired vet tech and would love to foster seniors or medical cases' and 'How do I sign up?' = foster volunteer offer; specialized expertise in medical care is valuable but no time-critical deadline.",
+      "suggested_routing": "Foster coordinator",
+      "summary": "Retired vet tech offers to foster senior and medical-need animals this winter and seeks sign-up information.",
+      "urgency": "P3"
+    }
+  },
+  "m5": {
+    "calls": [
+      {
+        "attempts": 1,
+        "cost_usd": 0.0143607,
+        "latency_ms": 10288,
+        "model": "claude-haiku-4-5-20251001",
+        "prompt_version": "v2",
+        "provider": "claude",
+        "raw": "```json\n{\n  \"category\": \"spam_other\",\n  \"urgency\": \"P4\",\n  \"suggested_routing\": \"Trust & Safety (spam)\",\n  \"summary\": \"Promotional email offering 90% discount on pet supplements with urgent click-through request.\",\n  \"reason\": \"'CONGRATS!', '90% off', 'Click bit.ly/xx', and 'before midnight' are classic spam/phishing indicators.\",\n  \"confidence\": \"high\",\n  \"human_review\": false\n}\n```",
+        "system": "You are the inbox triage system for PawsConnect, a pet adoption platform. Turn ONE free-text message into a record.\n\nALLOWED CATEGORIES (use exactly one):\n- adoption_application: about applying for / meeting / adopting a specific pet, or an application already filed\n- medical_question: health of an animal (adopted or listed), symptoms, meds, vet care\n- surrender_request: someone needs to give up an animal, or reports a found/stray/abandoned animal needing intake\n- foster_volunteer_offer: offers to foster, volunteer, or foster-to-adopt\n- general_question: hours, fees, policies, donations, logistics\n- spam_other: promotions, scams, irrelevant\n\nURGENCY:\n- P1 Urgent (same hour): an animal's life or welfare is at immediate risk (collapse, can't stand, bleeding, trapped, no water/heat).\n- P2 High (same day): hard deadline within ~72h (eviction, move), or an animal at risk soon.\n- P3 Normal (1-2 days): applications, foster offers, non-urgent health questions.\n- P4 Low (when convenient): general info, donations, spam.\n\nROUTING: one of \"Emergency on-call (vet tech)\", \"Intake coordinator\", \"Adoption counselor\", \"Foster coordinator\",\n\"Front desk\", \"Trust & Safety (spam)\". If a message mixes needs, route by the most urgent need.\n\nReturn: category, urgency, suggested_routing, summary (one sentence), reason (quote the words that drove the\ndecision), confidence (high/medium/low), human_review (true if confidence is not high, the message mixes\ncategories, or urgency is P1).\n\nEXAMPLES\nMessage: \"Can I come see Milo on Saturday? Our application was approved Tuesday.\"\n-> {\"category\":\"adoption_application\",\"urgency\":\"P3\",\"suggested_routing\":\"Adoption counselor\",\"summary\":\"Approved applicant wants to schedule a Saturday visit with Milo.\",\"reason\":\"'application was approved' and 'come see Milo' = adoption scheduling; no deadline or risk.\",\"confidence\":\"high\",\"human_review\":false}\n\nMessage: \"The kitten we adopted yesterday is having trouble breathing and her gums look pale.\"\n-> {\"category\":\"medical_question\",\"urgency\":\"P1\",\"suggested_routing\":\"Emergency on-call (vet tech)\",\"summary\":\"Newly adopted kitten has breathing trouble and pale gums.\",\"reason\":\"'trouble breathing' and 'gums look pale' are emergency signs.\",\"confidence\":\"high\",\"human_review\":true}\n\nMessage: \"We're moving overseas next week and can't take our rabbit. Please help.\"\n-> {\"category\":\"surrender_request\",\"urgency\":\"P2\",\"suggested_routing\":\"Intake coordinator\",\"summary\":\"Owner moving overseas next week needs to surrender a rabbit.\",\"reason\":\"'can't take our rabbit' = surrender; 'next week' is a near deadline.\",\"confidence\":\"high\",\"human_review\":false}\n\nMessage: \"I'd love to foster Coco, and is her cough getting better?\"\n-> {\"category\":\"foster_volunteer_offer\",\"urgency\":\"P3\",\"suggested_routing\":\"Foster coordinator\",\"summary\":\"Person offers to foster Coco and asks about her cough.\",\"reason\":\"Primary intent 'love to foster'; secondary medical question about 'her cough' is not an emergency.\",\"confidence\":\"medium\",\"human_review\":true}\n",
+        "user": "Message: \"CONGRATS! Your shelter qualifies for 90% off premium pet supplements. Click bit.ly/xx to claim before midnight!!!\"\nReturn the triage record JSON."
+      }
+    ],
+    "data": {
+      "category": "spam_other",
+      "confidence": "high",
+      "human_review": false,
+      "reason": "'CONGRATS!', '90% off', 'Click bit.ly/xx', and 'before midnight' are classic spam/phishing indicators.",
+      "suggested_routing": "Trust & Safety (spam)",
+      "summary": "Promotional email offering 90% discount on pet supplements with urgent click-through request.",
+      "urgency": "P4"
+    }
+  },
+  "m6": {
+    "calls": [
+      {
+        "attempts": 1,
+        "cost_usd": 0.0126627,
+        "latency_ms": 8137,
+        "model": "claude-haiku-4-5-20251001",
+        "prompt_version": "v2",
+        "provider": "claude",
+        "raw": "```json\n{\n  \"category\": \"general_question\",\n  \"urgency\": \"P4\",\n  \"suggested_routing\": \"Front desk\",\n  \"summary\": \"Customer asks about weekend operating hours and whether adoption fees include microchipping.\",\n  \"reason\": \"'weekend hours' and 'adoption fees' are policy and logistics inquiries matching general_question.\",\n  \"confidence\": \"high\",\n  \"human_review\": false\n}\n```",
+        "system": "You are the inbox triage system for PawsConnect, a pet adoption platform. Turn ONE free-text message into a record.\n\nALLOWED CATEGORIES (use exactly one):\n- adoption_application: about applying for / meeting / adopting a specific pet, or an application already filed\n- medical_question: health of an animal (adopted or listed), symptoms, meds, vet care\n- surrender_request: someone needs to give up an animal, or reports a found/stray/abandoned animal needing intake\n- foster_volunteer_offer: offers to foster, volunteer, or foster-to-adopt\n- general_question: hours, fees, policies, donations, logistics\n- spam_other: promotions, scams, irrelevant\n\nURGENCY:\n- P1 Urgent (same hour): an animal's life or welfare is at immediate risk (collapse, can't stand, bleeding, trapped, no water/heat).\n- P2 High (same day): hard deadline within ~72h (eviction, move), or an animal at risk soon.\n- P3 Normal (1-2 days): applications, foster offers, non-urgent health questions.\n- P4 Low (when convenient): general info, donations, spam.\n\nROUTING: one of \"Emergency on-call (vet tech)\", \"Intake coordinator\", \"Adoption counselor\", \"Foster coordinator\",\n\"Front desk\", \"Trust & Safety (spam)\". If a message mixes needs, route by the most urgent need.\n\nReturn: category, urgency, suggested_routing, summary (one sentence), reason (quote the words that drove the\ndecision), confidence (high/medium/low), human_review (true if confidence is not high, the message mixes\ncategories, or urgency is P1).\n\nEXAMPLES\nMessage: \"Can I come see Milo on Saturday? Our application was approved Tuesday.\"\n-> {\"category\":\"adoption_application\",\"urgency\":\"P3\",\"suggested_routing\":\"Adoption counselor\",\"summary\":\"Approved applicant wants to schedule a Saturday visit with Milo.\",\"reason\":\"'application was approved' and 'come see Milo' = adoption scheduling; no deadline or risk.\",\"confidence\":\"high\",\"human_review\":false}\n\nMessage: \"The kitten we adopted yesterday is having trouble breathing and her gums look pale.\"\n-> {\"category\":\"medical_question\",\"urgency\":\"P1\",\"suggested_routing\":\"Emergency on-call (vet tech)\",\"summary\":\"Newly adopted kitten has breathing trouble and pale gums.\",\"reason\":\"'trouble breathing' and 'gums look pale' are emergency signs.\",\"confidence\":\"high\",\"human_review\":true}\n\nMessage: \"We're moving overseas next week and can't take our rabbit. Please help.\"\n-> {\"category\":\"surrender_request\",\"urgency\":\"P2\",\"suggested_routing\":\"Intake coordinator\",\"summary\":\"Owner moving overseas next week needs to surrender a rabbit.\",\"reason\":\"'can't take our rabbit' = surrender; 'next week' is a near deadline.\",\"confidence\":\"high\",\"human_review\":false}\n\nMessage: \"I'd love to foster Coco, and is her cough getting better?\"\n-> {\"category\":\"foster_volunteer_offer\",\"urgency\":\"P3\",\"suggested_routing\":\"Foster coordinator\",\"summary\":\"Person offers to foster Coco and asks about her cough.\",\"reason\":\"Primary intent 'love to foster'; secondary medical question about 'her cough' is not an emergency.\",\"confidence\":\"medium\",\"human_review\":true}\n",
+        "user": "Message: \"What are your weekend hours, and do adoption fees include microchipping?\"\nReturn the triage record JSON."
+      }
+    ],
+    "data": {
+      "category": "general_question",
+      "confidence": "high",
+      "human_review": false,
+      "reason": "'weekend hours' and 'adoption fees' are policy and logistics inquiries matching general_question.",
+      "suggested_routing": "Front desk",
+      "summary": "Customer asks about weekend operating hours and whether adoption fees include microchipping.",
+      "urgency": "P4"
+    }
+  },
+  "m7": {
+    "calls": [
+      {
+        "attempts": 1,
+        "cost_usd": 0.0182617,
+        "latency_ms": 19063,
+        "model": "claude-haiku-4-5-20251001",
+        "prompt_version": "v2",
+        "provider": "claude",
+        "raw": "```json\n{\n  \"category\": \"adoption_application\",\n  \"urgency\": \"P3\",\n  \"suggested_routing\": \"Adoption counselor\",\n  \"summary\": \"Applicant approved for Rocco has compatibility concerns—husband unsure and toddler afraid of large dogs—and asks whether to attend Saturday visit and if adoption fee is refundable.\",\n  \"reason\": \"'We applied for Rocco' and 'come Saturday' indicate an active adoption application with scheduled visit; 'not sure my husband is on board' and 'toddler is scared of big dogs' show serious fit concerns; secondary question about 'fee refundable' adds a general policy element.\",\n  \"confidence\": \"medium\",\n  \"human_review\": true\n}\n```\n\nHuman review recommended because the message mixes adoption guidance (compatibility/readiness concerns) with a general policy question, and the applicant's doubts suggest they need counseling conversation, not just routing to a scheduler.",
+        "system": "You are the inbox triage system for PawsConnect, a pet adoption platform. Turn ONE free-text message into a record.\n\nALLOWED CATEGORIES (use exactly one):\n- adoption_application: about applying for / meeting / adopting a specific pet, or an application already filed\n- medical_question: health of an animal (adopted or listed), symptoms, meds, vet care\n- surrender_request: someone needs to give up an animal, or reports a found/stray/abandoned animal needing intake\n- foster_volunteer_offer: offers to foster, volunteer, or foster-to-adopt\n- general_question: hours, fees, policies, donations, logistics\n- spam_other: promotions, scams, irrelevant\n\nURGENCY:\n- P1 Urgent (same hour): an animal's life or welfare is at immediate risk (collapse, can't stand, bleeding, trapped, no water/heat).\n- P2 High (same day): hard deadline within ~72h (eviction, move), or an animal at risk soon.\n- P3 Normal (1-2 days): applications, foster offers, non-urgent health questions.\n- P4 Low (when convenient): general info, donations, spam.\n\nROUTING: one of \"Emergency on-call (vet tech)\", \"Intake coordinator\", \"Adoption counselor\", \"Foster coordinator\",\n\"Front desk\", \"Trust & Safety (spam)\". If a message mixes needs, route by the most urgent need.\n\nReturn: category, urgency, suggested_routing, summary (one sentence), reason (quote the words that drove the\ndecision), confidence (high/medium/low), human_review (true if confidence is not high, the message mixes\ncategories, or urgency is P1).\n\nEXAMPLES\nMessage: \"Can I come see Milo on Saturday? Our application was approved Tuesday.\"\n-> {\"category\":\"adoption_application\",\"urgency\":\"P3\",\"suggested_routing\":\"Adoption counselor\",\"summary\":\"Approved applicant wants to schedule a Saturday visit with Milo.\",\"reason\":\"'application was approved' and 'come see Milo' = adoption scheduling; no deadline or risk.\",\"confidence\":\"high\",\"human_review\":false}\n\nMessage: \"The kitten we adopted yesterday is having trouble breathing and her gums look pale.\"\n-> {\"category\":\"medical_question\",\"urgency\":\"P1\",\"suggested_routing\":\"Emergency on-call (vet tech)\",\"summary\":\"Newly adopted kitten has breathing trouble and pale gums.\",\"reason\":\"'trouble breathing' and 'gums look pale' are emergency signs.\",\"confidence\":\"high\",\"human_review\":true}\n\nMessage: \"We're moving overseas next week and can't take our rabbit. Please help.\"\n-> {\"category\":\"surrender_request\",\"urgency\":\"P2\",\"suggested_routing\":\"Intake coordinator\",\"summary\":\"Owner moving overseas next week needs to surrender a rabbit.\",\"reason\":\"'can't take our rabbit' = surrender; 'next week' is a near deadline.\",\"confidence\":\"high\",\"human_review\":false}\n\nMessage: \"I'd love to foster Coco, and is her cough getting better?\"\n-> {\"category\":\"foster_volunteer_offer\",\"urgency\":\"P3\",\"suggested_routing\":\"Foster coordinator\",\"summary\":\"Person offers to foster Coco and asks about her cough.\",\"reason\":\"Primary intent 'love to foster'; secondary medical question about 'her cough' is not an emergency.\",\"confidence\":\"medium\",\"human_review\":true}\n",
+        "user": "Message: \"We applied for Rocco but honestly I'm not sure my husband is on board and our toddler is scared of big dogs. Should we still come Saturday? Also is the fee refundable?\"\nReturn the triage record JSON."
+      }
+    ],
+    "data": {
+      "category": "adoption_application",
+      "confidence": "medium",
+      "human_review": true,
+      "reason": "'We applied for Rocco' and 'come Saturday' indicate an active adoption application with scheduled visit; 'not sure my husband is on board' and 'toddler is scared of big dogs' show serious fit concerns; secondary question about 'fee refundable' adds a general policy element.",
+      "suggested_routing": "Adoption counselor",
+      "summary": "Applicant approved for Rocco has compatibility concerns—husband unsure and toddler afraid of large dogs—and asks whether to attend Saturday visit and if adoption fee is refundable.",
+      "urgency": "P3"
+    }
+  },
+  "m8": {
+    "calls": [
+      {
+        "attempts": 1,
+        "cost_usd": 0.0196917,
+        "latency_ms": 21667,
+        "model": "claude-haiku-4-5-20251001",
+        "prompt_version": "v2",
+        "provider": "claude",
+        "raw": "```json\n{\n  \"category\": \"surrender_request\",\n  \"urgency\": \"P1\",\n  \"suggested_routing\": \"Intake coordinator\",\n  \"summary\": \"Person found an abandoned dog tied outside a gas station for 6 hours without water.\",\n  \"reason\": \"'Found a skinny dog tied outside' + 'no water' + '6 hours' = stray/abandoned animal in immediate danger; 'no water' is explicit P1 trigger per definition.\",\n  \"confidence\": \"high\",\n  \"human_review\": true\n}\n```",
+        "system": "You are the inbox triage system for PawsConnect, a pet adoption platform. Turn ONE free-text message into a record.\n\nALLOWED CATEGORIES (use exactly one):\n- adoption_application: about applying for / meeting / adopting a specific pet, or an application already filed\n- medical_question: health of an animal (adopted or listed), symptoms, meds, vet care\n- surrender_request: someone needs to give up an animal, or reports a found/stray/abandoned animal needing intake\n- foster_volunteer_offer: offers to foster, volunteer, or foster-to-adopt\n- general_question: hours, fees, policies, donations, logistics\n- spam_other: promotions, scams, irrelevant\n\nURGENCY:\n- P1 Urgent (same hour): an animal's life or welfare is at immediate risk (collapse, can't stand, bleeding, trapped, no water/heat).\n- P2 High (same day): hard deadline within ~72h (eviction, move), or an animal at risk soon.\n- P3 Normal (1-2 days): applications, foster offers, non-urgent health questions.\n- P4 Low (when convenient): general info, donations, spam.\n\nROUTING: one of \"Emergency on-call (vet tech)\", \"Intake coordinator\", \"Adoption counselor\", \"Foster coordinator\",\n\"Front desk\", \"Trust & Safety (spam)\". If a message mixes needs, route by the most urgent need.\n\nReturn: category, urgency, suggested_routing, summary (one sentence), reason (quote the words that drove the\ndecision), confidence (high/medium/low), human_review (true if confidence is not high, the message mixes\ncategories, or urgency is P1).\n\nEXAMPLES\nMessage: \"Can I come see Milo on Saturday? Our application was approved Tuesday.\"\n-> {\"category\":\"adoption_application\",\"urgency\":\"P3\",\"suggested_routing\":\"Adoption counselor\",\"summary\":\"Approved applicant wants to schedule a Saturday visit with Milo.\",\"reason\":\"'application was approved' and 'come see Milo' = adoption scheduling; no deadline or risk.\",\"confidence\":\"high\",\"human_review\":false}\n\nMessage: \"The kitten we adopted yesterday is having trouble breathing and her gums look pale.\"\n-> {\"category\":\"medical_question\",\"urgency\":\"P1\",\"suggested_routing\":\"Emergency on-call (vet tech)\",\"summary\":\"Newly adopted kitten has breathing trouble and pale gums.\",\"reason\":\"'trouble breathing' and 'gums look pale' are emergency signs.\",\"confidence\":\"high\",\"human_review\":true}\n\nMessage: \"We're moving overseas next week and can't take our rabbit. Please help.\"\n-> {\"category\":\"surrender_request\",\"urgency\":\"P2\",\"suggested_routing\":\"Intake coordinator\",\"summary\":\"Owner moving overseas next week needs to surrender a rabbit.\",\"reason\":\"'can't take our rabbit' = surrender; 'next week' is a near deadline.\",\"confidence\":\"high\",\"human_review\":false}\n\nMessage: \"I'd love to foster Coco, and is her cough getting better?\"\n-> {\"category\":\"foster_volunteer_offer\",\"urgency\":\"P3\",\"suggested_routing\":\"Foster coordinator\",\"summary\":\"Person offers to foster Coco and asks about her cough.\",\"reason\":\"Primary intent 'love to foster'; secondary medical question about 'her cough' is not an emergency.\",\"confidence\":\"medium\",\"human_review\":true}\n",
+        "user": "Message: \"Found a skinny dog tied outside the gas station on 5th for like 6 hours, no water. Not sure if I should bring it to you or call someone?\"\nReturn the triage record JSON."
+      }
+    ],
+    "data": {
+      "category": "surrender_request",
+      "confidence": "high",
+      "human_review": true,
+      "reason": "'Found a skinny dog tied outside' + 'no water' + '6 hours' = stray/abandoned animal in immediate danger; 'no water' is explicit P1 trigger per definition.",
+      "suggested_routing": "Intake coordinator",
+      "summary": "Person found an abandoned dog tied outside a gas station for 6 hours without water.",
+      "urgency": "P1"
+    }
+  },
+  "m9": {
+    "calls": [
+      {
+        "attempts": 1,
+        "cost_usd": 0.0169417,
+        "latency_ms": 15900,
+        "model": "claude-haiku-4-5-20251001",
+        "prompt_version": "v2",
+        "provider": "claude",
+        "raw": "```json\n{\n  \"category\": \"foster_volunteer_offer\",\n  \"urgency\": \"P3\",\n  \"suggested_routing\": \"Foster coordinator\",\n  \"summary\": \"Person wants to foster Luna before adopting to test compatibility with their dog, and asks about Luna's limp.\",\n  \"reason\": \"'Could I foster Luna first' and 'before I commit to adopting her' = foster-to-adopt offer; secondary question 'She's been limping a bit in her photos, is that ok?' is a mild health inquiry, not an emergency.\",\n  \"confidence\": \"medium\",\n  \"human_review\": true\n}\n```",
+        "system": "You are the inbox triage system for PawsConnect, a pet adoption platform. Turn ONE free-text message into a record.\n\nALLOWED CATEGORIES (use exactly one):\n- adoption_application: about applying for / meeting / adopting a specific pet, or an application already filed\n- medical_question: health of an animal (adopted or listed), symptoms, meds, vet care\n- surrender_request: someone needs to give up an animal, or reports a found/stray/abandoned animal needing intake\n- foster_volunteer_offer: offers to foster, volunteer, or foster-to-adopt\n- general_question: hours, fees, policies, donations, logistics\n- spam_other: promotions, scams, irrelevant\n\nURGENCY:\n- P1 Urgent (same hour): an animal's life or welfare is at immediate risk (collapse, can't stand, bleeding, trapped, no water/heat).\n- P2 High (same day): hard deadline within ~72h (eviction, move), or an animal at risk soon.\n- P3 Normal (1-2 days): applications, foster offers, non-urgent health questions.\n- P4 Low (when convenient): general info, donations, spam.\n\nROUTING: one of \"Emergency on-call (vet tech)\", \"Intake coordinator\", \"Adoption counselor\", \"Foster coordinator\",\n\"Front desk\", \"Trust & Safety (spam)\". If a message mixes needs, route by the most urgent need.\n\nReturn: category, urgency, suggested_routing, summary (one sentence), reason (quote the words that drove the\ndecision), confidence (high/medium/low), human_review (true if confidence is not high, the message mixes\ncategories, or urgency is P1).\n\nEXAMPLES\nMessage: \"Can I come see Milo on Saturday? Our application was approved Tuesday.\"\n-> {\"category\":\"adoption_application\",\"urgency\":\"P3\",\"suggested_routing\":\"Adoption counselor\",\"summary\":\"Approved applicant wants to schedule a Saturday visit with Milo.\",\"reason\":\"'application was approved' and 'come see Milo' = adoption scheduling; no deadline or risk.\",\"confidence\":\"high\",\"human_review\":false}\n\nMessage: \"The kitten we adopted yesterday is having trouble breathing and her gums look pale.\"\n-> {\"category\":\"medical_question\",\"urgency\":\"P1\",\"suggested_routing\":\"Emergency on-call (vet tech)\",\"summary\":\"Newly adopted kitten has breathing trouble and pale gums.\",\"reason\":\"'trouble breathing' and 'gums look pale' are emergency signs.\",\"confidence\":\"high\",\"human_review\":true}\n\nMessage: \"We're moving overseas next week and can't take our rabbit. Please help.\"\n-> {\"category\":\"surrender_request\",\"urgency\":\"P2\",\"suggested_routing\":\"Intake coordinator\",\"summary\":\"Owner moving overseas next week needs to surrender a rabbit.\",\"reason\":\"'can't take our rabbit' = surrender; 'next week' is a near deadline.\",\"confidence\":\"high\",\"human_review\":false}\n\nMessage: \"I'd love to foster Coco, and is her cough getting better?\"\n-> {\"category\":\"foster_volunteer_offer\",\"urgency\":\"P3\",\"suggested_routing\":\"Foster coordinator\",\"summary\":\"Person offers to foster Coco and asks about her cough.\",\"reason\":\"Primary intent 'love to foster'; secondary medical question about 'her cough' is not an emergency.\",\"confidence\":\"medium\",\"human_review\":true}\n",
+        "user": "Message: \"Could I foster Luna first to see if she gets along with my dog before I commit to adopting her? She's been limping a bit in her photos, is that ok?\"\nReturn the triage record JSON."
+      }
+    ],
+    "data": {
+      "category": "foster_volunteer_offer",
+      "confidence": "medium",
+      "human_review": true,
+      "reason": "'Could I foster Luna first' and 'before I commit to adopting her' = foster-to-adopt offer; secondary question 'She's been limping a bit in her photos, is that ok?' is a mild health inquiry, not an emergency.",
+      "suggested_routing": "Foster coordinator",
+      "summary": "Person wants to foster Luna before adopting to test compatibility with their dog, and asks about Luna's limp.",
+      "urgency": "P3"
+    }
+  }
+}
