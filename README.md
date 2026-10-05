@@ -33,7 +33,7 @@ API docs (Swagger UI): **http://localhost:3000/api/docs**
 <details><summary>No uv? Use pip instead</summary>
 
 ```bash
-python3 -m venv .venv && . .venv/bin/activate && pip install -r requirements.txt
+python3 -m venv .venv && . .venv/bin/activate && pip install -r requirements.txt "uvicorn[standard]"
 npx concurrently "npx next dev" "uvicorn api.index:app --reload --port 8000"
 ```
 </details>
