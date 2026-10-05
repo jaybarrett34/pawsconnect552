@@ -6,8 +6,8 @@ const inter = Inter({ variable: "--font-sans", subsets: ["latin"] });
 const fraunces = Fraunces({ variable: "--font-display", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "PawsConnect AI",
-  description: "AI suite for a pet adoption platform: listings, triage, counseling, matching, and bias auditing.",
+  title: "PawsConnect",
+  description: "Better listings, faster answers, and fairer matches for animal shelters and adopters.",
   robots: { index: false, follow: false },
 };
 

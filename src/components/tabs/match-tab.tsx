@@ -32,10 +32,9 @@ export function MatchTab() {
 
   return (
     <div>
-      <SectionIntro chapter="Ch. 3 · Chain-of-thought + self-consistency" title="Match Explainer"
-        who="Adoption counselors deciding which matches need a conversation">
-        Given a household profile and a pet, the model reasons step by step, five independent times. The majority
-        vote is the rating, and disagreement between runs shows how much to trust it.
+      <SectionIntro title="Match">
+        How well a household fits a pet, with the reasons behind it. Each match is assessed five times independently;
+        when the assessments disagree, the match is worth a conversation.
       </SectionIntro>
 
       <div className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Adopter household</div>

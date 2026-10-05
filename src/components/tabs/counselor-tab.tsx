@@ -81,9 +81,9 @@ export function CounselorTab() {
 
   return (
     <div>
-      <SectionIntro chapter="Ch. 3 · Role prompt + LLM-as-judge" title="Counselor “Maple”" who="Adopters (chat) and the operations team (quality)">
-        Adopters chat with Maple, a warm but honest counselor persona. Before any reply reaches the adopter, a second model
-        checks it against a five-point rubric. Failed drafts are rewritten once using the judge&apos;s feedback, or handed to a human.
+      <SectionIntro title="Adoption Counselor">
+        Adopters chat with Maple, PawsConnect&apos;s adoption counselor. Every reply passes a quality review before it&apos;s sent;
+        replies that fail are rewritten once or handed to a staff member.
       </SectionIntro>
 
       {/* Scenarios */}
@@ -99,7 +99,7 @@ export function CounselorTab() {
           >
             <div className="flex items-center gap-1.5 text-sm font-semibold">
               {s.title}
-              {s.weakened && <Pill tone="amber">weakened</Pill>}
+              {s.weakened && <Pill tone="amber">backup coverage</Pill>}
             </div>
             <p className="mt-0.5 text-xs text-muted-foreground">{s.description}</p>
           </button>
@@ -121,11 +121,11 @@ export function CounselorTab() {
           {convo?.weakened && (
             <div className="flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-100">
               <AlertTriangle className="mt-0.5 size-4 shrink-0" />
-              Maple is out today. Gus, a lazy backup manager whose prompt has no honesty, scope, or medical rules, is covering the chat. This is a deliberately induced failure to show the judge catching bad drafts before they reach the adopter.
+              Backup coverage: Maple is out today and Gus from the front office is covering the chat. His replies still go through quality review before they reach the adopter.
             </div>
           )}
 
-          {loading && <Loading label="Maple is drafting and the judge is reviewing…" />}
+          {loading && <Loading label="Drafting a reply and running quality review…" />}
           {error && <ErrorNote error={error} />}
 
           {!loading && turns.length > 0 && (
@@ -135,7 +135,7 @@ export function CounselorTab() {
                   <div className="flex justify-end">
                     <div className="max-w-[85%] rounded-2xl rounded-br-sm bg-primary px-3.5 py-2 text-sm text-primary-foreground">{t.user}</div>
                   </div>
-                  <MapleBubble turn={t} active={i === sel} onSelect={() => setSelected(i)} name={data?.data.weakened ? "Gus (backup manager)" : "Maple"} />
+                  <MapleBubble turn={t} active={i === sel} onSelect={() => setSelected(i)} name={data?.data.weakened ? "Gus (backup)" : "Maple"} />
                 </div>
               ))}
             </div>
@@ -156,7 +156,7 @@ export function CounselorTab() {
               </label>
               <label className="flex items-center gap-1.5">
                 <input type="checkbox" checked={weakened} onChange={(e) => setWeakened(e.target.checked)} />
-                Weakened persona (demo)
+                Backup coverage (Gus)
               </label>
             </div>
             <div className="flex gap-2">
@@ -181,16 +181,16 @@ export function CounselorTab() {
             {chatError && <ErrorNote error={chatError} />}
           </div>
 
-          {data && <MetaFooter calls={allCalls} title="Counselor + judge" cached={data.cached} />}
+          {data && <MetaFooter calls={allCalls} title="Counselor + quality review" cached={data.cached} />}
         </Panel>
 
         <Panel className="h-fit space-y-4 lg:sticky lg:top-28">
           <div className="flex items-center justify-between">
-            <h3 className="font-display text-lg font-semibold">Judge panel</h3>
+            <h3 className="font-display text-lg font-semibold">Quality review</h3>
             {selTurn && <span className="text-xs text-muted-foreground">Turn {sel + 1}</span>}
           </div>
           {!selTurn ? (
-            <p className="text-sm text-muted-foreground">Pick a scenario to see the judge&apos;s review.</p>
+            <p className="text-sm text-muted-foreground">Pick a conversation to see its review.</p>
           ) : (
             <>
               <VerdictBadge status={selTurn.status} />
@@ -214,7 +214,7 @@ function MapleBubble({ turn, active, onSelect, name }: { turn: Turn; active: boo
           <VerdictBadge status={turn.status} />
         </div>
         {turn.status !== "pass" && turn.judgement.verdict === "revise" && (
-          <Struck label="Draft rejected by judge" text={turn.draft} />
+          <Struck label="Draft held by quality review" text={turn.draft} />
         )}
         {turn.revision && revisionRejected && <Struck label="Rewrite also rejected" text={turn.revision} />}
         {turn.handoff ? (

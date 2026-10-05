@@ -58,10 +58,10 @@ export const FitBadge = ({ f, className }: { f: Fit; className?: string }) => <P
 export const fitColor = (f: Fit) => ({ "Strong Fit": "bg-teal-500", "Possible Fit": "bg-amber-400", "Poor Fit": "bg-rose-500" })[f];
 
 export function VerdictBadge({ status }: { status: "pass" | "revised" | "escalated" | "revise" }) {
-  if (status === "pass") return <Pill tone="green" icon={ShieldCheck}>Judge: PASS</Pill>;
-  if (status === "revised") return <Pill tone="amber" icon={PencilLine}>Judge: REVISED</Pill>;
-  if (status === "revise") return <Pill tone="amber" icon={PencilLine}>Judge: REVISE</Pill>;
-  return <Pill tone="red" icon={UserRound}>Escalated to human</Pill>;
+  if (status === "pass") return <Pill tone="green" icon={ShieldCheck}>Review: passed</Pill>;
+  if (status === "revised") return <Pill tone="amber" icon={PencilLine}>Review: revised</Pill>;
+  if (status === "revise") return <Pill tone="amber" icon={PencilLine}>Review: needs revision</Pill>;
+  return <Pill tone="red" icon={UserRound}>Handed to staff</Pill>;
 }
 
 export function ReviewFlag({ reasons, compact }: { reasons?: string[]; compact?: boolean }) {
@@ -95,7 +95,7 @@ export function MetaFooter({ calls, title, cached }: { calls: CallMeta[]; title:
       <span>prompt {c.prompt_version}</span>
       {cached && <span>replayed from cache</span>}
       <button onClick={() => inspect(calls, title)} className="ml-auto inline-flex items-center gap-1 font-medium text-primary hover:underline">
-        <Code2 className="size-3.5" /> View prompt
+        <Code2 className="size-3.5" /> Details
       </button>
     </div>
   );
@@ -117,15 +117,11 @@ export function ErrorNote({ error }: { error: string }) {
   );
 }
 
-export function SectionIntro({ chapter, title, who, children }: { chapter: string; title: string; who: string; children: React.ReactNode }) {
+export function SectionIntro({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="mb-6 space-y-1">
-      <div className="flex flex-wrap items-center gap-2">
-        <h2 className="font-display text-2xl font-semibold tracking-tight">{title}</h2>
-        <Pill tone="teal">{chapter}</Pill>
-      </div>
+      <h2 className="font-display text-2xl font-semibold tracking-tight">{title}</h2>
       <p className="max-w-3xl text-sm text-muted-foreground">{children}</p>
-      <p className="text-xs text-muted-foreground"><span className="font-semibold text-foreground/70">For:</span> {who}</p>
     </div>
   );
 }

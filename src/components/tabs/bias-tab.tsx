@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Grid3x3, Scale, ShieldAlert, ShieldCheck, Target } from "lucide-react";
+import { Grid3x3, ShieldAlert, ShieldCheck } from "lucide-react";
 import { api, type BiasResult, type Envelope, type Fit } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { useApp, useRun } from "@/components/app-state";
@@ -10,11 +10,6 @@ import StarBorder from "@/components/reactbits/StarBorder";
 
 const FITS: Fit[] = ["Poor Fit", "Possible Fit", "Strong Fit"];
 
-const RISK_CARDS = [
-  { icon: Target, title: "Decision it improves", body: "Whether the matcher can be trusted before it reaches adopters." },
-  { icon: ShieldAlert, title: "What could go wrong", body: "A label-only rating shift means the AI encodes breed stereotypes (e.g. 'pit bull')." },
-  { icon: Scale, title: "Mitigation", body: "Flag pairs where the label alone moves the vote. The matcher prompt says breed is never evidence, and humans review flagged pairs." },
-];
 
 export function BiasTab() {
   const { mode, samples } = useApp();
@@ -58,20 +53,10 @@ export function BiasTab() {
 
   return (
     <div>
-      <SectionIntro chapter="Ch. 3 · Counterfactual prompting + self-consistency" title="Bias Lens"
-        who="Trust & Safety analysts auditing whether AI match ratings depend on breed labels">
-        We hold every fact in the listing fixed, swap only the breed label, and re-run the match explainer five times
-        per label. If the label alone moves the rating, the AI is judging the breed, not the dog.
+      <SectionIntro title="Bias Lens">
+        Fairness audit for match ratings. The same listing is re-assessed with only the breed label changed; if the label
+        alone moves the rating, the pair is flagged for Trust &amp; Safety review.
       </SectionIntro>
-
-      <div className="mb-6 grid gap-3 md:grid-cols-3">
-        {RISK_CARDS.map(({ icon: Icon, title, body }) => (
-          <div key={title} className="rounded-2xl border bg-card p-4">
-            <div className="mb-1 flex items-center gap-1.5 text-sm font-semibold"><Icon className="size-4 text-primary" />{title}</div>
-            <p className="text-xs text-muted-foreground">{body}</p>
-          </div>
-        ))}
-      </div>
 
       <div className="mb-6 flex flex-wrap items-end gap-4">
         <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">

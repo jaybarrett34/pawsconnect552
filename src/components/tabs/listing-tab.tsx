@@ -38,9 +38,9 @@ export function ListingTab() {
 
   return (
     <div>
-      <SectionIntro chapter="Ch. 2 · Vision + structured output" title="Listing Studio" who="Shelter staff and volunteers drafting adoption profiles">
-        Snap one photo and get an honest draft listing. Anything the model can&apos;t see is marked <em>unknown</em> rather than guessed,
-        and any low-confidence field sends the draft to a human before it&apos;s posted.
+      <SectionIntro title="Listing Studio">
+        Add one photo and get a draft adoption profile. Anything that can&apos;t be seen in the photo is marked unknown,
+        and drafts with uncertain details are held for staff review before posting.
       </SectionIntro>
 
       <div className="grid gap-6 lg:grid-cols-[320px_1fr]">

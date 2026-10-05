@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import Script from "next/script";
 import { Lock, LockOpen, Moon, PawPrint, Sun } from "lucide-react";
 import { api, ApiError, type Mode } from "@/lib/api";
@@ -18,7 +19,7 @@ declare global {
   }
 }
 
-export function Header() {
+export function Header({ nav, controls = true }: { nav?: React.ReactNode; controls?: boolean }) {
   const { mode, setMode, config, refreshConfig } = useApp();
   const [unlockOpen, setUnlockOpen] = useState(false);
   const live = (config?.providers ?? []) as Mode[];
@@ -32,11 +33,13 @@ export function Header() {
   return (
     <header className="sticky top-0 z-40 border-b bg-background/85 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3">
-        <div className="flex items-center gap-2">
+        <Link href="/" className="flex shrink-0 items-center gap-2">
           <span className="grid size-8 place-items-center rounded-xl bg-primary text-primary-foreground"><PawPrint className="size-4" /></span>
-          <span className="font-display text-lg font-semibold tracking-tight">PawsConnect <span className="text-primary">AI</span></span>
-        </div>
+          <span className="font-display text-lg font-semibold tracking-tight">PawsConnect</span>
+        </Link>
+        {nav}
         <div className="ml-auto flex items-center gap-2">
+          {controls && <>
           <label className="sr-only" htmlFor="mode">Mode</label>
           <div className="relative">
             <span className={cn("pointer-events-none absolute left-3 top-1/2 size-2 -translate-y-1/2 rounded-full", MODE_DOT[mode])} />
@@ -62,6 +65,7 @@ export function Header() {
               <span className="hidden sm:inline">{config.unlocked ? "Live unlocked" : "Unlock live"}</span>
             </button>
           )}
+          </>}
           <ThemeToggle />
         </div>
       </div>

@@ -57,9 +57,9 @@ export function TriageTab() {
 
   return (
     <div>
-      <SectionIntro chapter="Ch. 3 · Few-shot classification" title="Inbox Triage" who="Shelter coordinators working the inquiry queue">
-        Every message becomes a routed, prioritized record with the model&apos;s stated reason. The queue is sorted by urgency;
-        anything uncertain, mixed, or urgent is flagged for a human.
+      <SectionIntro title="Inbox">
+        Incoming messages, sorted by urgency and routed to the right team, each with the reason it was classified that way.
+        Urgent, mixed, or unclear messages are flagged for a person.
       </SectionIntro>
 
       <div className="mb-4 grid gap-3 sm:grid-cols-3">
