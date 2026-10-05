@@ -6,11 +6,14 @@
     "dev": "concurrently -k -n web,api -c magenta,cyan \"next dev\" \"npm run api\"",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
+    "lint": "npm run lint:web && npm run lint:py",
     "api": "uv run uvicorn api.index:app --reload --port 8000 --reload-dir api",
     "warm": "uv run scripts/warm.py",
     "zip": "bash scripts/zip.sh",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "lint:web": "eslint .",
+    "lint:py": "uv run ruff check api scripts && uv run ruff format --check api scripts",
+    "format:py": "uv run ruff check --fix api scripts && uv run ruff format api scripts"
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",

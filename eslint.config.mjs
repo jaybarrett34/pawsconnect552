@@ -18,8 +18,14 @@ const eslintConfig = [
       "out/**",
       "build/**",
       "next-env.d.ts",
+      ".venv/**",
+      // vendored: shadcn/ui and reactbits.dev components
+      "src/components/ui/**",
+      "src/components/reactbits/**",
     ],
   },
+  // Plain <img>: photos are small local assets and images.unoptimized is set.
+  { rules: { "@next/next/no-img-element": "off" } },
 ];
 
 export default eslintConfig;
