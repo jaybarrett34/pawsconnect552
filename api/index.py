@@ -1,4 +1,5 @@
 """Vercel Python entrypoint (and local: `uvicorn api.index:app`)."""
+
 import sys
 from pathlib import Path
 

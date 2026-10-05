@@ -1,4 +1,5 @@
 """Storage: bundled demo cache (read-only JSON), and a tiny KV (Upstash REST on Vercel, memory locally)."""
+
 from __future__ import annotations
 
 import time
@@ -25,15 +26,24 @@ class Samples:
         return {x["id"]: x for x in self.raw[key]}
 
     @cached_property
-    def pets(self): return self._index("pets")
+    def pets(self):
+        return self._index("pets")
+
     @cached_property
-    def photos(self): return self._index("photos")
+    def photos(self):
+        return self._index("photos")
+
     @cached_property
-    def messages(self): return self._index("messages")
+    def messages(self):
+        return self._index("messages")
+
     @cached_property
-    def profiles(self): return self._index("profiles")
+    def profiles(self):
+        return self._index("profiles")
+
     @cached_property
-    def scenarios(self): return self._index("scenarios")
+    def scenarios(self):
+        return self._index("scenarios")
 
 
 class DemoCache:
@@ -68,11 +78,13 @@ class KV:
 
     def __init__(self, url: str | None, token: str | None):
         self.remote = bool(url and token)
-        self._client = httpx.AsyncClient(base_url=url, headers={"Authorization": f"Bearer {token}"}, timeout=5) if self.remote else None
+        self._url, self._headers = url, {"Authorization": f"Bearer {token}"}
         self._mem: dict[str, tuple[Any, float | None]] = {}
 
     async def _cmd(self, *args: Any) -> Any:
-        r = await self._client.post("/", content=orjson.dumps([str(a) for a in args]))
+        # Fresh client per call: Vercel's Python runtime may use a new event loop per invocation.
+        async with httpx.AsyncClient(timeout=5) as c:
+            r = await c.post(self._url, headers=self._headers, content=orjson.dumps([str(a) for a in args]))
         r.raise_for_status()
         return r.json()["result"]
 

@@ -21,7 +21,7 @@ export function ListingTab() {
     run(() => api.listing({ mode, photo_id: id }));
   };
 
-  useEffect(() => { if (samples) runSample(selected); }, [samples, mode]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { if (samples && selected !== "upload") runSample(selected); }, [samples, mode]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const onUpload = (file: File) => {
     const reader = new FileReader();
@@ -51,7 +51,6 @@ export function ListingTab() {
               <button key={p.id} onClick={() => runSample(p.id)} title={p.label}
                 className={cn("group relative aspect-square overflow-hidden rounded-xl ring-2 ring-transparent transition",
                   selected === p.id ? "ring-primary" : "hover:ring-border")}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={p.file} alt={p.label} className="size-full object-cover" />
                 {p.hardCase && (
                   <span className="absolute inset-x-1 bottom-1 rounded-md bg-black/65 px-1 py-0.5 text-[10px] font-medium text-white">
@@ -86,7 +85,6 @@ function ListingCard({ env, photo }: { env: Envelope<Listing>; photo?: string })
   return (
     <SpotlightCard className="!rounded-2xl !border-border !bg-card !p-0 text-card-foreground" spotlightColor="rgba(31, 111, 107, 0.12)">
       <div className="grid items-start gap-0 md:grid-cols-[240px_1fr]">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
         {photo && <img src={photo} alt="Uploaded pet" className="aspect-[4/3] w-full rounded-t-2xl object-cover md:aspect-square md:rounded-none md:rounded-tl-2xl" />}
         <div className="space-y-4 p-5">
           <div className="flex flex-wrap items-start justify-between gap-2">

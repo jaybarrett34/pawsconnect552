@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import hashlib
 from abc import ABC, abstractmethod
-from typing import Any, ClassVar, Generic, TypeVar
+from typing import Any, ClassVar
 
 import orjson
 from fastapi import HTTPException
@@ -13,10 +13,8 @@ from ..llm import LLMProvider, get_provider
 from ..schemas import CallMeta, Envelope, Mode
 from ..store import demo_cache, kv
 
-Req = TypeVar("Req", bound=BaseModel)
 
-
-class Feature(ABC, Generic[Req]):
+class Feature[Req: BaseModel](ABC):
     """Template for every AI feature: cached demo lookup -> live KV cache -> provider call."""
 
     name: ClassVar[str]
@@ -37,13 +35,12 @@ class Feature(ABC, Generic[Req]):
             return Envelope(feature=self.name, input_id=key, mode=mode, cached=True, **hit)
 
         live_key = self._live_key(req, mode)
-        if kv.remote and (hit := await kv.get(live_key)):
+        if hit := await kv.get(live_key):
             return Envelope(feature=self.name, input_id=key or "adhoc", mode=mode, cached=True, **orjson.loads(hit))
 
         data, calls = await self.compute(req, get_provider(mode))
         payload = {"data": _dump(data), "calls": [c.model_dump() for c in calls]}
-        if kv.remote:
-            await kv.set(live_key, orjson.dumps(payload).decode(), settings.live_cache_ttl)
+        await kv.set(live_key, orjson.dumps(payload).decode(), settings.live_cache_ttl)
         return Envelope(feature=self.name, input_id=key or "adhoc", mode=mode, cached=False, **payload)
 
     def _live_key(self, req: Req, mode: Mode) -> str:

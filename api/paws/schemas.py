@@ -1,4 +1,5 @@
 """Pydantic models: LLM output schemas (sent to the model as JSON Schema) and API envelopes."""
+
 from __future__ import annotations
 
 from typing import Any, Literal
@@ -36,8 +37,12 @@ class Listing(BaseModel):
 
 # ---------- Part C1: Triage ----------
 Category = Literal[
-    "adoption_application", "medical_question", "surrender_request",
-    "foster_volunteer_offer", "general_question", "spam_other",
+    "adoption_application",
+    "medical_question",
+    "surrender_request",
+    "foster_volunteer_offer",
+    "general_question",
+    "spam_other",
 ]
 Urgency = Literal["P1", "P2", "P3", "P4"]
 
@@ -117,21 +122,21 @@ class RunRequest(BaseModel):
 
 class ListingRequest(RunRequest):
     photo_id: str | None = None
-    image_base64: str | None = Field(default=None, description="Uploaded photo (live mode only)")
+    image_base64: str | None = Field(default=None, max_length=7_000_000, description="Uploaded photo (live mode only)")
     mime_type: str = "image/jpeg"
 
 
 class TriageRequest(RunRequest):
-    message_ids: list[str] | None = None
-    text: str | None = Field(default=None, description="Ad-hoc message (live mode only)")
+    message_ids: list[str] | None = Field(default=None, max_length=20)
+    text: str | None = Field(default=None, max_length=2000, description="Ad-hoc message (live mode only)")
 
 
 class ChatRequest(RunRequest):
     scenario_id: str | None = None
     pet_id: str = "biscuit"
     weakened: bool = False
-    history: list[dict[str, str]] = []
-    message: str | None = None
+    history: list[dict[str, str]] = Field(default=[], max_length=40)
+    message: str | None = Field(default=None, max_length=2000)
 
 
 class MatchRequest(RunRequest):
@@ -146,5 +151,5 @@ class BiasRequest(RunRequest):
 
 
 class UnlockRequest(BaseModel):
-    passcode: str
-    turnstile_token: str | None = None
+    passcode: str = Field(max_length=128)
+    turnstile_token: str | None = Field(default=None, max_length=4096)

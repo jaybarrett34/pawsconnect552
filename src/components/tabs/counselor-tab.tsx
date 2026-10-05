@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { AlertTriangle, CheckCircle2, HeartHandshake, Send, XCircle } from "lucide-react";
 import { useApp, useRun } from "@/components/app-state";
 import { ErrorNote, Loading, MetaFooter, Panel, Pill, SectionIntro, VerdictBadge, Why } from "@/components/kit";
-import { api, type CallMeta, type Conversation, type Envelope, type Judgement, type Turn } from "@/lib/api";
+import { api, type Conversation, type Envelope, type Judgement, type Turn } from "@/lib/api";
 import { cn } from "@/lib/utils";
 
 const CRITERIA: { key: keyof Omit<Judgement, "verdict" | "feedback">; label: string }[] = [
@@ -20,7 +20,6 @@ export function CounselorTab() {
   const { data, loading, error, run, setData } = useRun<Envelope<Conversation>>();
   const [scenarioId, setScenarioId] = useState<string | null>(null);
   const [selected, setSelected] = useState<number | null>(null);
-  const [extraCalls, setExtraCalls] = useState<CallMeta[]>([]);
 
   // Free chat (live only)
   const [message, setMessage] = useState("");
@@ -32,7 +31,6 @@ export function CounselorTab() {
   const runScenario = (id: string) => {
     setScenarioId(id);
     setSelected(null);
-    setExtraCalls([]);
     run(() => api.counselor({ mode, scenario_id: id }));
   };
 
@@ -42,7 +40,7 @@ export function CounselorTab() {
   }, [samples]);
 
   const convo = data?.data;
-  const turns = convo?.turns ?? [];
+  const turns = useMemo(() => convo?.turns ?? [], [convo]);
   const activePetId = convo?.pet_id ?? petId;
   const pet = samples?.pets.find((p) => p.id === activePetId);
   const defaultSel = useMemo(() => {
@@ -62,13 +60,13 @@ export function CounselorTab() {
       { role: "maple", text: t.final },
     ]);
     try {
-      const res = await api.counselor({ mode, message: message.trim(), pet_id: pid, history, weakened });
+      const wk = convo?.weakened ?? weakened;
+      const res = await api.counselor({ mode, message: message.trim(), pet_id: pid, history, weakened: wk });
       setData({
         ...res,
-        data: { pet_id: pid, weakened: (convo?.weakened ?? false) || weakened, turns: [...turns, ...res.data.turns] },
-        calls: data?.calls ?? [],
+        data: { pet_id: pid, weakened: wk, turns: [...turns, ...res.data.turns] },
+        calls: [...(data?.calls ?? []), ...res.calls],
       });
-      setExtraCalls((c) => [...c, ...res.calls]);
       setSelected(turns.length + res.data.turns.length - 1);
       setMessage("");
       setScenarioId(null);
@@ -79,7 +77,7 @@ export function CounselorTab() {
     }
   };
 
-  const allCalls = [...(data?.calls ?? []), ...extraCalls];
+  const allCalls = data?.calls ?? [];
 
   return (
     <div>
@@ -150,7 +148,7 @@ export function CounselorTab() {
                 Pet
                 <select
                   value={convo?.pet_id ?? petId}
-                  onChange={(e) => { setPetId(e.target.value); setData(null); setScenarioId(null); setExtraCalls([]); }}
+                  onChange={(e) => { setPetId(e.target.value); setData(null); setScenarioId(null); }}
                   className="rounded-md border bg-background px-2 py-1"
                 >
                   {samples?.pets.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}

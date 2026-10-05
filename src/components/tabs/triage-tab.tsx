@@ -3,11 +3,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "motion/react";
 import { Send } from "lucide-react";
-import { api, type Envelope, type Triage } from "@/lib/api";
+import { api, ApiError, type Envelope, type Triage } from "@/lib/api";
 import CountUp from "@/components/reactbits/CountUp";
 import { useApp, useRun } from "../app-state";
 import { ErrorNote, Loading, MetaFooter, Panel, Pill, ReviewFlag, SectionIntro, UrgencyBadge } from "../kit";
 import { cn } from "@/lib/utils";
+
+type Row = Envelope<Triage> & { adhocText?: string };
 
 const CATEGORY_LABEL: Record<string, string> = {
   adoption_application: "Adoption application",
@@ -23,12 +25,14 @@ export function TriageTab() {
   const { data, loading, error, run } = useRun<Envelope<Triage>[]>();
   const [open, setOpen] = useState<string | null>(null);
   const [text, setText] = useState("");
-  const [adhoc, setAdhoc] = useState<Envelope<Triage>[]>([]);
+  const [adhoc, setAdhoc] = useState<Row[]>([]);
+  const [busy, setBusy] = useState(false);
+  const [adhocError, setAdhocError] = useState<string | null>(null);
 
-  useEffect(() => { if (samples) run(() => api.triage({ mode })); }, [samples, mode]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { setAdhoc([]); if (samples) run(() => api.triage({ mode })); }, [samples, mode]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const msgs = useMemo(() => Object.fromEntries((samples?.messages ?? []).map((m) => [m.id, m])), [samples]);
-  const rows = useMemo(
+  const rows = useMemo<Row[]>(
     () => [...adhoc, ...(data ?? [])].sort((a, b) => a.data.urgency.localeCompare(b.data.urgency)),
     [data, adhoc],
   );
@@ -37,17 +41,19 @@ export function TriageTab() {
   const urgentOk = scored.filter((r) => msgs[r.input_id].gold.urgency === r.data.urgency).length;
 
   const submit = async () => {
-    if (!text.trim()) return;
+    if (!text.trim() || busy) return;
+    setBusy(true);
+    setAdhocError(null);
     try {
       const res = await api.triage({ mode, text });
       setAdhoc((a) => [...res.map((r, i) => ({ ...r, input_id: `adhoc-${Date.now()}-${i}`, adhocText: text })), ...a]);
       setText("");
     } catch (e) {
-      alertless(e);
+      setAdhocError(e instanceof ApiError ? e.message : "Triage failed. Please try again.");
+    } finally {
+      setBusy(false);
     }
   };
-  const [adhocError, setAdhocError] = useState<string | null>(null);
-  const alertless = (e: unknown) => setAdhocError(e instanceof Error ? e.message : "Failed");
 
   return (
     <div>
@@ -103,7 +109,7 @@ export function TriageTab() {
                 {isOpen && (
                   <div className="space-y-2 bg-muted/40 px-4 pb-4 pt-1 text-sm">
                     <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Original message{m ? ` from ${m.from}` : ""}</p>
-                    <blockquote className="rounded-xl border-l-4 border-primary bg-card p-3">{m?.text ?? (r as { adhocText?: string }).adhocText}</blockquote>
+                    <blockquote className="rounded-xl border-l-4 border-primary bg-card p-3">{m?.text ?? r.adhocText}</blockquote>
                     {m && (
                       <p className="text-xs text-muted-foreground">
                         Hand label: <b>{CATEGORY_LABEL[m.gold.category]}</b> · {m.gold.urgency}. Model: <b>{CATEGORY_LABEL[r.data.category]}</b> · {r.data.urgency}
@@ -124,7 +130,7 @@ export function TriageTab() {
           <textarea value={text} onChange={(e) => setText(e.target.value)} rows={2} disabled={mode === "cached"}
             placeholder={mode === "cached" ? "Live mode required for new messages" : "Paste an inquiry…"}
             className="min-h-16 flex-1 rounded-xl border bg-background p-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60" />
-          <button onClick={submit} disabled={mode === "cached" || !text.trim()}
+          <button onClick={submit} disabled={mode === "cached" || !text.trim() || busy}
             className="inline-flex h-10 items-center justify-center gap-1.5 self-end rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground disabled:opacity-50">
             <Send className="size-4" /> Triage
           </button>

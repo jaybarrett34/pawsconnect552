@@ -2,6 +2,7 @@
 
 usage: uv run scripts/warm.py [--provider claude|gemini] [--only listing,triage,...] [--force]
 """
+
 from __future__ import annotations
 
 import argparse
@@ -13,8 +14,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "api"))
 
 from paws import features as F  # noqa: E402
-from paws.schemas import BiasRequest, ChatRequest, ListingRequest, MatchRequest  # noqa: E402
 from paws.features.triage import TriageItem  # noqa: E402
+from paws.schemas import BiasRequest, ChatRequest, ListingRequest, MatchRequest  # noqa: E402
 from paws.store import demo_cache, samples  # noqa: E402
 
 
@@ -27,8 +28,9 @@ def jobs():
 
 
 async def main(provider: str, only: set[str] | None, force: bool):
-    todo = [(f, r) for f, r in jobs()
-            if (not only or f.name in only) and (force or demo_cache.get(f.name, f.cache_key(r)) is None)]
+    todo = [
+        (f, r) for f, r in jobs() if (not only or f.name in only) and (force or demo_cache.get(f.name, f.cache_key(r)) is None)
+    ]
     print(f"{len(todo)} jobs via {provider}")
     sem = asyncio.Semaphore(4)
 

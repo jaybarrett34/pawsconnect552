@@ -1,4 +1,5 @@
 """Part B: one pet photo -> structured, honest adoption listing (vision + fallback prompting)."""
+
 from __future__ import annotations
 
 from fastapi import HTTPException
@@ -25,7 +26,10 @@ class ListingFeature(Feature[ListingRequest]):
         else:
             raise HTTPException(404, "Unknown photo")
         data, meta = await llm.complete(
-            system=LISTING.system, version=LISTING.version, schema=Listing, image=image,
+            system=LISTING.system,
+            version=LISTING.version,
+            schema=Listing,
+            image=image,
             user="Draft the adoption listing for this photo. Follow every rule, especially the fallback rule.",
         )
         return enforce_review(data), [meta]

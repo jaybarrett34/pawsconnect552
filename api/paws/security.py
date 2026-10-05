@@ -1,11 +1,12 @@
 """Live-mode gate (passcode + 2-strike/30-min lockout + Cloudflare Turnstile + signed session cookie)
 and a scraper-defense middleware for /api."""
+
 from __future__ import annotations
 
 import hmac
 import re
 import time
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 import httpx
 import jwt
@@ -54,7 +55,8 @@ class LiveGate:
     async def unlock(self, request: Request, response: Response, passcode: str, token: str | None) -> dict:
         if not self.enabled:
             return await self.status(request)
-        ip, key = client_ip(request), self._lock_key(client_ip(request))
+        ip = client_ip(request)
+        key = self._lock_key(ip)
         if int(await self.kv.get(key) or 0) >= self.cfg.lockout_attempts:
             # Locked: reject without counting, so attempts can't extend someone else's lock.
             raise HTTPException(429, {"message": "Live mode locked", "retry_after": await self.kv.ttl(key)})
@@ -63,14 +65,27 @@ class LiveGate:
             fails = await self.kv.incr(key, self.cfg.lockout_seconds)
             left = max(self.cfg.lockout_attempts - fails, 0)
             if left == 0:
-                raise HTTPException(429, {"message": "Too many wrong passcodes. Live mode locked for 30 minutes.",
-                                          "retry_after": self.cfg.lockout_seconds})
+                # Re-arm so the 30 minutes start at the locking strike (not the first one).
+                await self.kv.set(key, str(fails), self.cfg.lockout_seconds)
+                raise HTTPException(
+                    429,
+                    {
+                        "message": "Too many wrong passcodes. Live mode locked for 30 minutes.",
+                        "retry_after": self.cfg.lockout_seconds,
+                    },
+                )
             raise HTTPException(401, {"message": "Wrong passcode", "attempts_left": left})
         await self.kv.delete(key)
-        exp = datetime.now(timezone.utc) + timedelta(hours=self.cfg.session_hours)
-        response.set_cookie(COOKIE, jwt.encode({"live": True, "exp": exp}, self.cfg.session_secret, "HS256"),
-                            httponly=True, secure=self.cfg.on_vercel, samesite="lax",
-                            max_age=self.cfg.session_hours * 3600, path="/")
+        exp = datetime.now(UTC) + timedelta(hours=self.cfg.session_hours)
+        response.set_cookie(
+            COOKIE,
+            jwt.encode({"live": True, "exp": exp}, self.cfg.session_secret, "HS256"),
+            httponly=True,
+            secure=self.cfg.on_vercel,
+            samesite="lax",
+            max_age=self.cfg.session_hours * 3600,
+            path="/",
+        )
         return {**await self.status(request), "unlocked": True}
 
     def has_session(self, request: Request) -> bool:
@@ -87,8 +102,6 @@ class LiveGate:
             raise HTTPException(400, f"Live provider '{mode}' is not available on this server")
         if self.enabled and not self.has_session(request):
             raise HTTPException(403, "Live mode is locked. Unlock it with the passcode.")
-        if self.cfg.on_vercel and not self.kv.remote:
-            raise HTTPException(503, "Live mode disabled: lockout store unavailable (fail closed)")
 
     async def _verify_turnstile(self, token: str | None, ip: str) -> None:
         if not self.cfg.turnstile_secret:
@@ -108,10 +121,12 @@ class BotGuard(BaseHTTPMiddleware):
     BLOCKED_UA = re.compile(
         r"GPTBot|ChatGPT-User|CCBot|ClaudeBot|anthropic-ai|Google-Extended|PerplexityBot|Bytespider|Amazonbot|"
         r"FacebookBot|meta-externalagent|Applebot-Extended|Diffbot|ImagesiftBot|Omgilibot|scrapy|python-requests|"
-        r"Go-http-client|curl/|wget|HeadlessChrome|PhantomJS", re.I)
+        r"Go-http-client|curl/|wget|HeadlessChrome|PhantomJS",
+        re.I,
+    )
     OPEN_PATHS = ("/api/docs", "/api/openapi.json", "/api/health")
 
-    def __init__(self, app, store: KV, per_minute: int = 60):
+    def __init__(self, app, store: KV, per_minute: int = 240):
         super().__init__(app)
         self.kv, self.per_minute = store, per_minute
 
@@ -121,6 +136,8 @@ class BotGuard(BaseHTTPMiddleware):
             ua = request.headers.get("user-agent", "")
             if not ua or (self.BLOCKED_UA.search(ua) and not settings_allows_local(request)):
                 return JSONResponse({"detail": "Automated access is not permitted"}, 403)
+        # Rate-limit only the expensive calls, so a classroom on one NAT'd IP can browse freely.
+        if request.method == "POST" and path.startswith("/api/"):
             bucket = f"rl:{client_ip(request)}:{int(time.time() // 60)}"
             if await self.kv.incr(bucket, 70) > self.per_minute:
                 return JSONResponse({"detail": "Rate limit exceeded"}, 429, headers={"Retry-After": "60"})

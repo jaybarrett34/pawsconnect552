@@ -1,14 +1,16 @@
 """FastAPI app. Swagger UI at /api/docs."""
+
 from __future__ import annotations
 
 from fastapi import APIRouter, FastAPI, Request, Response
 from fastapi.middleware.gzip import GZipMiddleware
+from fastapi.responses import JSONResponse
 
 from . import features as F
 from .config import settings
+from .llm import LLMError
 from .prompts import ALL as PROMPTS
-from .schemas import (BiasRequest, ChatRequest, Envelope, ListingRequest, MatchRequest, TriageRequest,
-                      UnlockRequest)
+from .schemas import BiasRequest, ChatRequest, Envelope, ListingRequest, MatchRequest, TriageRequest, UnlockRequest
 from .security import BotGuard, gate
 from .store import kv, samples
 
@@ -16,7 +18,7 @@ app = FastAPI(
     title="PawsConnect AI API",
     version="1.0.0",
     description="MIS 552 HW1: AI suite for a pet-adoption platform. `mode=cached` replays recorded responses; "
-                "`claude`/`gemini` call a live model (gated by passcode when configured).",
+    "`claude`/`gemini` call a live model (gated by passcode when configured).",
     docs_url="/api/docs",
     openapi_url="/api/openapi.json",
     redoc_url=None,
@@ -36,8 +38,9 @@ async def health():
 
 @meta.get("/config")
 async def config(request: Request):
-    return {"providers": settings.providers, "default_mode": settings.default_mode,
-            "on_vercel": settings.on_vercel, **await gate.status(request)}
+    st = await gate.status(request)
+    mode = settings.default_mode if st["unlocked"] else "cached"
+    return {"providers": settings.providers, "default_mode": mode, "on_vercel": settings.on_vercel, **st}
 
 
 @meta.get("/samples")
@@ -48,11 +51,6 @@ async def get_samples():
 @meta.get("/prompts")
 async def get_prompts():
     return [{"name": p.name, "version": p.version, "system": p.system} for p in PROMPTS]
-
-
-@auth.get("/status")
-async def auth_status(request: Request):
-    return await gate.status(request)
 
 
 @auth.post("/unlock")
@@ -69,7 +67,8 @@ async def listing(body: ListingRequest, request: Request):
 @ai.post("/triage", response_model=list[Envelope], summary="Part C1: inquiry triage")
 async def triage(body: TriageRequest, request: Request):
     gate.require(request, body.mode)
-    return await F.triage.run_many(body.message_ids or list(samples.messages), body.text, body.mode)
+    ids = list(dict.fromkeys(body.message_ids or samples.messages))
+    return await F.triage.run_many(ids, body.text, body.mode)
 
 
 @ai.post("/counselor", response_model=Envelope, summary="Part C2: counselor + LLM judge")
@@ -92,5 +91,11 @@ async def bias(body: BiasRequest, request: Request):
 
 for r in (meta, auth, ai):
     app.include_router(r)
+
+
+@app.exception_handler(LLMError)
+async def llm_error(_: Request, exc: LLMError):
+    return JSONResponse({"detail": f"The model call failed: {exc}"}, 502)
+
 
 __all__ = ["app"]

@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { api, ApiError, type CallMeta, type Mode, type Samples, type ServerConfig } from "@/lib/api";
 
 interface AppState {
@@ -56,15 +56,18 @@ export function useRun<T>() {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const seq = useRef(0);
   const run = useCallback(async (fn: () => Promise<T>) => {
+    const id = ++seq.current; // only the latest request may update state
     setLoading(true);
     setError(null);
     try {
-      setData(await fn());
+      const d = await fn();
+      if (id === seq.current) setData(d);
     } catch (e) {
-      setError(e instanceof ApiError ? e.message : "Something went wrong. Please try again.");
+      if (id === seq.current) setError(e instanceof ApiError ? e.message : "Something went wrong. Please try again.");
     } finally {
-      setLoading(false);
+      if (id === seq.current) setLoading(false);
     }
   }, []);
   return { data, loading, error, run, setData };

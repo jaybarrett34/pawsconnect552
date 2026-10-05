@@ -1,4 +1,5 @@
 """Part C1: free-text inquiry -> triage record (few-shot classification, fixed label set)."""
+
 from __future__ import annotations
 
 from fastapi import HTTPException
@@ -27,7 +28,9 @@ class TriageFeature(Feature[TriageItem]):
         if not text:
             raise HTTPException(404, "Unknown message")
         data, meta = await llm.complete(
-            system=TRIAGE.system, version=TRIAGE.version, schema=Triage,
+            system=TRIAGE.system,
+            version=TRIAGE.version,
+            schema=Triage,
             user=f'Message: "{text}"\nReturn the triage record JSON.',
         )
         if data.confidence != "high" or data.urgency == "P1":

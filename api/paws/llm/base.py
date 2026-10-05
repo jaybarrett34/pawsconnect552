@@ -1,4 +1,5 @@
 """Provider abstraction: every model call goes through LLMProvider.complete()."""
+
 from __future__ import annotations
 
 import asyncio
@@ -43,8 +44,14 @@ class LLMProvider(ABC):
     async def _call(self, system: str, user: str, schema: type[BaseModel], temperature: float, image: Image | None) -> Raw: ...
 
     async def complete(
-        self, *, system: str, user: str, schema: type[T], version: str,
-        temperature: float = 0.2, image: Image | None = None,
+        self,
+        *,
+        system: str,
+        user: str,
+        schema: type[T],
+        version: str,
+        temperature: float = 0.2,
+        image: Image | None = None,
     ) -> tuple[T, CallMeta]:
         """Call the model, validate against `schema`, retry once with the validation error appended."""
         t0, prompt, cost, err = time.perf_counter(), user, None, None
@@ -56,11 +63,20 @@ class LLMProvider(ABC):
                 data = schema.model_validate(extract_json(raw.text))
             except (ValueError, ValidationError) as e:
                 err = e
-                prompt = f"{user}\n\nYour previous answer failed validation: {str(e)[:300]}\nReturn ONLY the corrected JSON object."
+                prompt = (
+                    f"{user}\n\nYour previous answer failed validation: {str(e)[:300]}\nReturn ONLY the corrected JSON object."
+                )
                 continue
             return data, CallMeta(
-                provider=self.name, model=raw.model, latency_ms=int((time.perf_counter() - t0) * 1000),
-                cost_usd=cost, prompt_version=version, system=system, user=user, raw=raw.text, attempts=attempt,
+                provider=self.name,
+                model=raw.model,
+                latency_ms=int((time.perf_counter() - t0) * 1000),
+                cost_usd=cost,
+                prompt_version=version,
+                system=system,
+                user=user,
+                raw=raw.text,
+                attempts=attempt,
             )
         raise LLMError(f"Model output failed validation twice: {str(err)[:300]}")
 

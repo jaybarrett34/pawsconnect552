@@ -3,6 +3,7 @@
 Notes: the CLI exposes no temperature flag, so sampling uses Claude's default (1.0). Images are passed by
 file path with only the Read tool enabled and scoped to the image's folder.
 """
+
 from __future__ import annotations
 
 import asyncio
@@ -30,8 +31,17 @@ class ClaudeCliProvider(LLMProvider):
             f"{system}\n\nOUTPUT FORMAT: Respond with ONLY one JSON object matching this JSON Schema. "
             f"No prose, no code fences.\n{json.dumps(schema.model_json_schema())}"
         )
-        args = ["claude", "-p", "--output-format", "json", "--model", self.model,
-                "--system-prompt", sys_prompt, "--no-session-persistence"]
+        args = [
+            "claude",
+            "-p",
+            "--output-format",
+            "json",
+            "--model",
+            self.model,
+            "--system-prompt",
+            sys_prompt,
+            "--no-session-persistence",
+        ]
         prompt = user
         if image:
             path = image.path or self._spill(image)
@@ -42,14 +52,17 @@ class ClaudeCliProvider(LLMProvider):
 
         # Neutral cwd so no project CLAUDE.md / settings leak into the call.
         proc = await asyncio.create_subprocess_exec(
-            *args, cwd=tempfile.gettempdir(),
-            stdin=asyncio.subprocess.PIPE, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE,
+            *args,
+            cwd=tempfile.gettempdir(),
+            stdin=asyncio.subprocess.PIPE,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
         )
         try:
             out, err = await asyncio.wait_for(proc.communicate(prompt.encode()), timeout=180)
         except TimeoutError:
             proc.kill()
-            raise LLMError("claude -p timed out")
+            raise LLMError("claude -p timed out") from None
         if proc.returncode != 0:
             raise LLMError(f"claude -p exited {proc.returncode}: {(err or out).decode()[:400]}")
         res = orjson.loads(out)
@@ -61,7 +74,6 @@ class ClaudeCliProvider(LLMProvider):
     @staticmethod
     def _spill(image: Image) -> str:
         suffix = "." + (image.mime_type.split("/")[-1] or "jpg")
-        f = tempfile.NamedTemporaryFile(prefix="paws-", suffix=suffix, delete=False)
-        f.write(base64.b64decode(image.base64 or ""))
-        f.close()
+        with tempfile.NamedTemporaryFile(prefix="paws-", suffix=suffix, delete=False) as f:
+            f.write(base64.b64decode(image.base64 or ""))
         return f.name

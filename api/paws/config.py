@@ -1,4 +1,5 @@
 """Runtime settings, read once from the environment. Never hardcode keys."""
+
 from __future__ import annotations
 
 import os
@@ -50,6 +51,9 @@ class Settings:
 
     @property
     def providers(self) -> list[str]:
+        # On Vercel, live mode needs the shared lockout store; without it, offer nothing (fail closed).
+        if self.on_vercel and not (self.kv_url and self.kv_token):
+            return []
         out = []
         if self.claude_cli:
             out.append("claude")
@@ -64,3 +68,6 @@ class Settings:
 
 
 settings = Settings()
+
+if settings.on_vercel and settings.passcode and settings.session_secret == "dev-only-insecure-secret":
+    raise RuntimeError("SESSION_SECRET must be set when LIVE_MODE_PASSCODE is set")

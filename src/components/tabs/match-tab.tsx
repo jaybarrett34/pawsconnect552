@@ -9,7 +9,7 @@ import { ErrorNote, FitBadge, fitColor, Loading, MetaFooter, Panel, ReviewFlag, 
 import CountUp from "@/components/reactbits/CountUp";
 import SpotlightCard from "@/components/reactbits/SpotlightCard";
 
-export const pickCard = (active: boolean) =>
+const pickCard = (active: boolean) =>
   cn(
     "cursor-pointer rounded-2xl! border! bg-card! p-4! text-left transition",
     active ? "border-primary! ring-2 ring-primary/40" : "border-border! hover:border-primary/50!",

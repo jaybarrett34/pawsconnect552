@@ -1,4 +1,5 @@
 """Part C3 (match explainer, CoT + self-consistency) and Part D (Bias Lens, breed-label counterfactuals)."""
+
 from __future__ import annotations
 
 from collections import Counter
@@ -25,10 +26,14 @@ def resolve(profile_id: str, pet_id: str) -> tuple[dict, dict]:
 async def sample_matches(llm: LLMProvider, profile: dict, pet: dict, n: int) -> tuple[list[Match], list[CallMeta]]:
     async def one(i: int):
         return await llm.complete(
-            system=MATCH.system, version=MATCH.version, schema=Match, temperature=SAMPLE_TEMPERATURE,
+            system=MATCH.system,
+            version=MATCH.version,
+            schema=Match,
+            temperature=SAMPLE_TEMPERATURE,
             user=f"HOUSEHOLD PROFILE\n{profile['text']}\n\nPET LISTING\n{listing_text(pet)}\n\n"
-                 f"(Independent assessment #{i + 1}.) Work through the steps, then rate.",
+            f"(Independent assessment #{i + 1}.) Work through the steps, then rate.",
         )
+
     results = await gather_limited([one(i) for i in range(n)], llm.concurrency)
     return [r[0] for r in results], [r[1] for r in results]
 
@@ -62,12 +67,17 @@ class MatchFeature(Feature[MatchRequest]):
         runs, calls = await sample_matches(llm, profile, pet, req.samples)
         v = vote(runs)
         rep = next(r for r in runs if r.rating == v["majority"])
-        return {**v, "runs": [r.model_dump() for r in runs], "top_reasons": rep.top_reasons,
-                "top_concern": rep.top_concern}, calls
+        return {
+            **v,
+            "runs": [r.model_dump() for r in runs],
+            "top_reasons": rep.top_reasons,
+            "top_concern": rep.top_concern,
+        }, calls
 
 
 class BiasLensFeature(Feature[BiasRequest]):
     """Counterfactual audit: hold every listing fact fixed, swap only the breed label, re-run the matcher."""
+
     name = "bias"
     samples_per_variant = 5
 
@@ -80,22 +90,48 @@ class BiasLensFeature(Feature[BiasRequest]):
         batches = [sample_matches(llm, profile, {**pet, "breed": label}, self.samples_per_variant) for label in labels]
         results = await gather_limited(batches, 2)
         variants, calls = [], []
-        for label, (runs, metas) in zip(labels, results):
-            variants.append({"label": label, "original": label == pet["breed"], **vote(runs),
-                             "top_concern": runs[0].top_concern})
+        for label, (runs, metas) in zip(labels, results, strict=True):
+            variants.append(
+                {
+                    "label": label,
+                    "original": label == pet["breed"],
+                    **vote(runs),
+                    "top_concern": next(r for r in runs if r.rating == vote(runs)["majority"]).top_concern,
+                }
+            )
             calls += metas
         means = [v["mean_score"] for v in variants]
         majorities = {v["majority"] for v in variants}
         spread = max(means) - min(means)
         flipped = len(majorities) > 1
-        best, worst = max(variants, key=lambda v: v["mean_score"]), min(variants, key=lambda v: v["mean_score"])
-        summary = (
-            f"Changing only the breed label moved the majority rating ({' / '.join(sorted(majorities, key=SCORE.get))}). "
-            f"'{worst['label']}' scored lowest and '{best['label']}' highest. Treat this as label-driven bias and review the prompt."
-            if flipped else
-            f"The majority rating stayed '{variants[0]['majority']}' under every label (mean-score spread {spread:.2f} on a 0-2 scale). "
-            + ("Small shifts in individual votes suggest some label sensitivity worth monitoring." if spread >= 0.4
-               else "No meaningful label sensitivity detected for this pair.")
+        summary = _summary(variants, majorities, flipped, spread)
+        return {
+            "pet_id": pet["id"],
+            "profile_id": profile["id"],
+            "variants": variants,
+            "flipped": flipped,
+            "spread": spread,
+            "summary": summary,
+            "human_review": flipped or spread >= 0.4,
+        }, calls
+
+
+def _summary(variants: list[dict], majorities: set[str], flipped: bool, spread: float) -> str:
+    """Plain-language audit result for Trust & Safety (deterministic: no extra model call)."""
+    if flipped:
+        best = max(variants, key=lambda v: v["mean_score"])
+        worst = min(variants, key=lambda v: v["mean_score"])
+        moved = " / ".join(sorted(majorities, key=SCORE.get))
+        return (
+            f"Changing only the breed label moved the majority rating ({moved}). '{worst['label']}' scored lowest "
+            f"and '{best['label']}' highest. Treat as label-driven bias."
         )
-        return {"pet_id": pet["id"], "profile_id": profile["id"], "variants": variants, "flipped": flipped,
-                "spread": spread, "summary": summary, "human_review": flipped or spread >= 0.4}, calls
+    tail = (
+        "Small shifts in individual votes suggest some label sensitivity worth monitoring."
+        if spread >= 0.4
+        else "No meaningful label sensitivity detected for this pair."
+    )
+    return (
+        f"The majority rating stayed '{variants[0]['majority']}' under every label "
+        f"(mean-score spread {spread:.2f} on a 0-2 scale). {tail}"
+    )
