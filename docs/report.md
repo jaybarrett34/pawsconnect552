@@ -81,6 +81,22 @@ Claude Code (Claude Opus) built the app from a PRD I directed and approved: the 
 
 ## 7. Appendix
 
+### A. Beyond the requirements
+
+| Area | What I built |
+|---|---|
+| Deployment | Live at pawsconnect552.vercel.app: Next.js + TypeScript front end and a FastAPI (Python) API deployed together on Vercel, auto-deployed from GitHub on every push. Interactive API docs (Swagger) at /api/docs. |
+| Live-mode security | The public site runs the cached demo; live mode needs a passcode. Two wrong attempts lock that IP out for 30 minutes. Unlock sets a signed (HS256), httpOnly 12-hour cookie checked server-side on every live call. The server fails closed if its secret or lockout store is missing. |
+| Redis | Upstash Redis (via Vercel) stores the lockout counters across serverless instances and caches live model responses for 7 days, so repeat requests don't spend API quota. |
+| Cloudflare | Cloudflare Turnstile bot check on the unlock form, verified server-side; a failed bot check does not burn a passcode attempt. |
+| Scraper defense | robots.txt blocks AI crawlers; middleware rejects known scraper user agents, rate-limits paid requests per IP, and marks API responses noindex. |
+| Two model providers | One provider interface: Claude Haiku 4.5 through the Claude Code CLI (local) and Gemini 3.1 Flash-Lite (deployed). Every output is validated against a JSON schema with one automatic retry; 195 of 196 recorded calls passed on the first try. |
+| Transparency | Every result has a Details panel with the exact prompt, prompt version, model, latency, and cost. Triage accuracy against my hand labels is shown live in the Inbox. |
+| Product UI | A landing page plus a shelter console with top navigation, dark mode, reduced-motion support, keyboard focus states, and a mobile layout. |
+| Engineering quality | Python managed with uv (lockfile), lint and format with ruff, ESLint and strict TypeScript; an independent AI code review whose 14 findings I fixed; MIT-licensed code; photos credited under their Creative Commons licenses. |
+
+### B. Live-mode screenshots
+
 Figure 1: [live-mode screenshot: Listings + Details panel]
 
 Figure 2: [live-mode screenshot: Counselor quality review panel]

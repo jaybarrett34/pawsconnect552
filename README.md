@@ -12,6 +12,17 @@ MIS 552 · Homework 1. An AI feature suite for **PawsConnect**, a fictional two-
 | Match | C3 | Household × pet fit with reasons, concern, and a 5-run vote | Chain-of-thought + self-consistency |
 | Bias Lens | D | Does a breed label *alone* change the matcher's rating? | Counterfactual prompting + self-consistency |
 
+
+## Beyond the requirements
+- **Deployed** on Vercel (Next.js + FastAPI serverless), auto-deployed from GitHub; Swagger docs at `/api/docs`.
+- **Live-mode gate:** passcode, 2-strike / 30-minute per-IP lockout, signed httpOnly session cookie, fail-closed config.
+- **Upstash Redis:** shared lockout state + 7-day cache of live model responses.
+- **Cloudflare Turnstile** on the unlock form (server-verified; a failed bot check never costs a passcode attempt).
+- **Scraper defense:** `robots.txt`, user-agent blocking, per-IP rate limits on paid calls, `noindex`.
+- **Two providers** behind one interface (Claude via `claude -p` locally, Gemini deployed), schema-validated with automatic retry.
+- **Transparency:** per-result Details panel (prompt, version, model, latency, cost); triage accuracy vs. hand labels in the UI.
+- **Quality:** uv lockfile, ruff, ESLint, strict TypeScript, independent AI code review (14 fixes applied).
+
 ---
 
 ## Quick start (grading: no API key needed)
